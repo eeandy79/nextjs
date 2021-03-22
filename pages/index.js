@@ -1,13 +1,68 @@
 import Head from 'next/head'
 import styles from '../styles/Home.module.css'
+import { useAuth0 } from "@auth0/auth0-react";
+import {
+  Collapse,
+  Container,
+  Navbar,
+  NavbarToggler,
+  NavbarBrand,
+  Nav,
+  NavItem,
+  NavLink,
+  Button,
+  UncontrolledDropdown,
+  DropdownToggle,
+  DropdownMenu,
+  DropdownItem,
+} from "reactstrap";
+
 
 export default function Home() {
+  const {
+    user,
+    isAuthenticated,
+    loginWithRedirect,
+    logout,
+  } = useAuth0();
+
+  const logoutWithRedirect = () =>
+    logout({
+      returnTo: window.location.origin,
+    });
+
   return (
     <div className={styles.container}>
       <Head>
         <title>Create Next App</title>
         <link rel="icon" href="/favicon.ico" />
       </Head>
+            <Nav className="d-none d-md-block" navbar>
+              {!isAuthenticated && (
+                <NavItem>
+                  <Button
+                    id="qsLoginBtn"
+                    color="primary"
+                    className="btn-margin"
+                    onClick={() => loginWithRedirect()}
+                  >
+                    Login
+                  </Button>
+                </NavItem>
+			  )}
+	          {isAuthenticated  && (
+                <NavItem>
+                  <Button
+                    id="qsLoginBtn"
+                    color="primary"
+                    className="btn-margin"
+                    onClick={() => logoutWithRedirect()}
+                  >
+                    Logout
+                  </Button>
+                </NavItem>
+              )}
+           </Nav>
 
       <main className={styles.main}>
         <h1 className={styles.title}>
