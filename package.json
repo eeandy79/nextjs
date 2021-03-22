@@ -9,9 +9,13 @@
   },
   "dependencies": {
     "next": "10.0.5",
+    "@fortawesome/fontawesome-free": "5.14.0",
+    "@popperjs/core": "2.5.1",
+    "@tailwindcss/custom-forms": "0.2.1",
     "react": "17.0.1",
     "react-dom": "17.0.1",
     "reactstrap": "^8.0.0",
+    "tailwindcss": "1.8.10",
     "@auth0/auth0-react": "latest"
   }
 }

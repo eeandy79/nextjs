@@ -2,6 +2,10 @@ import '../styles/globals.css'
 import Router from 'next/router';
 import { Auth0Provider } from '@auth0/auth0-react';
 
+import "@fortawesome/fontawesome-free/css/all.min.css";
+import "assets/styles/tailwind.css";
+
+
 const onRedirectCallback = (appState) => {
 	Router.replace(appState?.returnTo || '/');
 };

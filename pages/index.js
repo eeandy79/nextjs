@@ -1,5 +1,6 @@
 import Head from 'next/head'
 import styles from '../styles/Home.module.css'
+import IndexNavbar from "../components/Navbars/IndexNavbar.js";
 import { useAuth0 } from "@auth0/auth0-react";
 import {
   Collapse,
@@ -32,6 +33,8 @@ export default function Home() {
     });
 
   return (
+	  <>
+	  <IndexNavbar fixed />
     <div className={styles.container}>
       <Head>
         <title>Create Next App</title>
@@ -116,5 +119,6 @@ export default function Home() {
         </a>
       </footer>
     </div>
+		</>
   )
 }
