@@ -13,7 +13,7 @@ function MyApp({ Component, pageProps }) {
         clientId={process.env.NEXT_PUBLIC_CLIENT_ID}
         audience={process.env.NEXT_PUBLIC_AUDIENCE}
         scope="read:users"
-        redirectUri={typeof window !== 'undefined' && window.location.origin}
+        redirectUri={process.env.NEXT_REDIRECT_URI}
         onRedirectCallback={onRedirectCallback}
       >
 		<Component {...pageProps} />
