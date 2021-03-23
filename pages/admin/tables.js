@@ -8,7 +8,9 @@ import CardTable from "components/Cards/CardTable.js";
 
 import Admin from "layouts/Admin.js";
 
-export default function Tables() {
+import { withAuthenticationRequired } from "@auth0/auth0-react";
+
+export default withAuthenticationRequired(function Tables() {
   return (
     <Admin>
       <div className="flex flex-wrap mt-4">
@@ -21,4 +23,4 @@ export default function Tables() {
       </div>
     </Admin>
   );
-}
+});
