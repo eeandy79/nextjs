@@ -18,7 +18,7 @@ function MyApp({ Component, pageProps }) {
         clientId={process.env.NEXT_PUBLIC_CLIENT_ID}
         audience={process.env.NEXT_PUBLIC_AUDIENCE}
         scope="read:users"
-        redirectUri={process.env.NEXT_PUBLIC_CALLBACK}
+        redirectUri="callback"
         onRedirectCallback={onRedirectCallback}
       >
 		<Component {...pageProps} />
