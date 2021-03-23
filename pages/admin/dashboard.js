@@ -8,10 +8,11 @@ import CardPageVisits from "components/Cards/CardPageVisits.js";
 import CardSocialTraffic from "components/Cards/CardSocialTraffic.js";
 
 // layout for page
-
 import Admin from "layouts/Admin.js";
 
-export default function Dashboard() {
+import { withAuthenticationRequired } from "@auth0/auth0-react";
+
+export default withAuthenticationRequired(function Dashboard() {
   return (
     <Admin>
       <div className="flex flex-wrap">
@@ -32,4 +33,4 @@ export default function Dashboard() {
       </div>
     </Admin>
   );
-}
+});

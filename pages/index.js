@@ -59,7 +59,7 @@ export default function Home() {
                     id="qsLoginBtn"
                     color="primary"
                     className="btn-margin"
-                    onClick={() => logoutWithRedirect()}
+				    onClick={() => logoutWithRedirect()}
                   >
                     Logout
                   </Button>

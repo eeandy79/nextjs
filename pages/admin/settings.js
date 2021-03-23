@@ -9,7 +9,9 @@ import CardProfile from "components/Cards/CardProfile.js";
 
 import Admin from "layouts/Admin.js";
 
-export default function Settings() {
+import { withAuthenticationRequired } from "@auth0/auth0-react";
+
+export default withAuthenticationRequired(function Settings() {
   return (
     <Admin>
       <div className="flex flex-wrap">
@@ -22,4 +24,4 @@ export default function Settings() {
       </div>
     </Admin>
   );
-}
+});

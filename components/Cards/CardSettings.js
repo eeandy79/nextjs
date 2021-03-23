@@ -1,8 +1,10 @@
 import React from "react";
 
 // components
+import { useAuth0 } from "@auth0/auth0-react";
 
 export default function CardSettings() {
+  const { user } = useAuth0();
   return (
     <>
       <div className="relative flex flex-col min-w-0 break-words w-full mb-6 shadow-lg rounded-lg bg-gray-200 border-0">
@@ -49,7 +51,7 @@ export default function CardSettings() {
                   <input
                     type="email"
                     className="px-3 py-3 placeholder-gray-400 text-gray-700 bg-white rounded text-sm shadow focus:outline-none focus:shadow-outline w-full ease-linear transition-all duration-150"
-                    defaultValue="jesse@example.com"
+                    defaultValue={user.email}
                   />
                 </div>
               </div>
@@ -171,8 +173,7 @@ export default function CardSettings() {
                     type="text"
                     className="px-3 py-3 placeholder-gray-400 text-gray-700 bg-white rounded text-sm shadow focus:outline-none focus:shadow-outline w-full ease-linear transition-all duration-150"
                     rows="4"
-                    defaultValue="A beautiful UI Kit and Admin for NextJS & Tailwind CSS. It is Free
-                    and Open Source."
+                    defaultValue={JSON.stringify(user, null, 3)}
                   ></textarea>
                 </div>
               </div>

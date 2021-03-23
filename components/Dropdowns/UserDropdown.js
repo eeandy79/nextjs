@@ -1,5 +1,6 @@
 import React from "react";
 import { createPopper } from "@popperjs/core";
+import { useAuth0 } from "@auth0/auth0-react";
 
 const UserDropdown = () => {
   // dropdown props
@@ -15,6 +16,12 @@ const UserDropdown = () => {
   const closeDropdownPopover = () => {
     setDropdownPopoverShow(false);
   };
+  const logoutWithRedirect = () =>
+    logout({
+      returnTo: window.location.origin,
+    });
+  const { user, logout } = useAuth0();
+
   return (
     <>
       <a
@@ -31,7 +38,7 @@ const UserDropdown = () => {
             <img
               alt="..."
               className="w-full rounded-full align-middle border-none shadow-lg"
-              src={require("assets/img/team-1-800x800.jpg")}
+              src={user.picture}
             />
           </span>
         </div>
@@ -76,9 +83,9 @@ const UserDropdown = () => {
           className={
             "text-sm py-2 px-4 font-normal block w-full whitespace-no-wrap bg-transparent text-gray-800"
           }
-          onClick={(e) => e.preventDefault()}
+	  	  onClick={() => logoutWithRedirect()}
         >
-          Seprated link
+          Logout
         </a>
       </div>
     </>

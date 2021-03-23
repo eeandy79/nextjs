@@ -7,7 +7,8 @@ import "assets/styles/tailwind.css";
 
 
 const onRedirectCallback = (appState) => {
-	Router.replace(appState?.returnTo || '/');
+	//Router.replace(appState?.returnTo || '/admin/dashboard');
+	Router.replace('/admin/dashboard');
 };
 
 function MyApp({ Component, pageProps }) {
@@ -17,7 +18,7 @@ function MyApp({ Component, pageProps }) {
         clientId={process.env.NEXT_PUBLIC_CLIENT_ID}
         audience={process.env.NEXT_PUBLIC_AUDIENCE}
         scope="read:users"
-        redirectUri={typeof window !== 'undefined' && window.location.origin}
+        redirectUri={process.env.NEXT_PUBLIC_CALLBACK}
         onRedirectCallback={onRedirectCallback}
       >
 		<Component {...pageProps} />
