@@ -4,6 +4,7 @@ import { Auth0Provider } from '@auth0/auth0-react';
 
 import "@fortawesome/fontawesome-free/css/all.min.css";
 import "assets/styles/tailwind.css";
+import console from 'console'
 
 
 const onRedirectCallback = (appState) => {
@@ -18,7 +19,7 @@ function MyApp({ Component, pageProps }) {
         clientId={process.env.NEXT_PUBLIC_CLIENT_ID}
         audience={process.env.NEXT_PUBLIC_AUDIENCE}
         scope="read:users"
-        redirectUri="callback"
+        redirectUri={process.env.NEXT_PUBLIC_CALLBACK}
         onRedirectCallback={onRedirectCallback}
       >
 		<Component {...pageProps} />
