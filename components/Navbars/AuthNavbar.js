@@ -97,7 +97,7 @@ export default function Navbar(props) {
                   type="button"
                   onClick={() => loginWithRedirect()}
                 >
-                  <i className="fas fa-arrow-alt-circle-down"></i> Login
+                  <i className="fas fa-sign-in-alt"></i> Login
                 </button>
               </li>
             </ul>

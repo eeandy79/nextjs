@@ -85,7 +85,7 @@ const UserDropdown = () => {
           }
 	  	  onClick={() => logoutWithRedirect()}
         >
-          Logout
+          <i className="fas fa-sign-out-alt"></i> Logout
         </a>
       </div>
     </>
