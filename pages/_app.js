@@ -8,8 +8,8 @@ import console from 'console'
 
 
 const onRedirectCallback = (appState) => {
-	//Router.replace(appState?.returnTo || '/admin/dashboard');
-	Router.replace('/admin/dashboard');
+	Router.replace(appState?.returnTo || '/');
+	//Router.replace('/admin/dashboard');
 };
 
 function MyApp({ Component, pageProps }) {

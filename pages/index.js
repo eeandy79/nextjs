@@ -1,6 +1,8 @@
 import Head from 'next/head'
+import Router from 'next/router';
 import styles from '../styles/Home.module.css'
 import IndexNavbar from "../components/Navbars/IndexNavbar.js";
+import Dashboard from "./admin/dashboard.js";
 import { useAuth0 } from "@auth0/auth0-react";
 import {
   Collapse,
@@ -19,7 +21,7 @@ import {
 } from "reactstrap";
 
 
-export default function Home() {
+function Index() {
   const {
     user,
     isAuthenticated,
@@ -122,3 +124,21 @@ export default function Home() {
 		</>
   )
 }
+
+export default function Home() {
+  const {
+    user,
+    isLoading,
+    isAuthenticated,
+  } = useAuth0();
+
+  if (!isLoading) {
+    if (isAuthenticated) {
+      return <Dashboard/>
+    } else {
+      return <Index/>
+    }
+  }
+  return <div>Loading...</div>
+}
+
