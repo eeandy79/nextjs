@@ -1,17 +1,50 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 
 // components
 import { useAuth0 } from "@auth0/auth0-react";
+import console from "console"
 
 export default function CardSettings() {
-  const { user } = useAuth0();
+	const { user, isAuthenticated, getAccessTokenSilently } = useAuth0();
+	const [userMetadata, setUserMetadata] = useState(null);
+
+	useEffect(() => {
+		const getUserMetadata = async () => {
+			const domain = process.env.NEXT_PUBLIC_DOMAIN;
+
+			try {
+				const accessToken = await getAccessTokenSilently({
+					audience: `https://${domain}/api/v2/`,
+					scope: "read:current_user",
+				});
+
+				const userDetailsByIdUrl = `https://${domain}/api/v2/users/${user.sub}`;
+
+				const metadataResponse = await fetch(userDetailsByIdUrl, {
+					headers: {
+						Authorization: `Bearer ${accessToken}`,
+					},
+				});
+
+				const { user_metadata } = await metadataResponse.json();
+				console.log(user_metadata);
+
+				setUserMetadata(user_metadata);
+			} catch (e) {
+				console.log(e.message);
+			}
+		};
+
+		getUserMetadata();
+	}, []);
+
   return (
     <>
       <div className="relative flex flex-col min-w-0 break-words w-full mb-6 shadow-lg rounded-lg bg-gray-200 border-0">
         <div className="rounded-t bg-white mb-0 px-6 py-6">
           <div className="text-center flex justify-between">
             <h6 className="text-gray-800 text-xl font-bold">My account</h6>
-            <button
+	                   <button
               className="bg-gray-800 active:bg-gray-700 text-white font-bold uppercase text-xs px-4 py-2 rounded shadow hover:shadow-md outline-none focus:outline-none mr-1 ease-linear transition-all duration-150"
               type="button"
             >
@@ -169,12 +202,15 @@ export default function CardSettings() {
                   >
                     About me
                   </label>
+
                   <textarea
+	                readyonly="true"
                     type="text"
                     className="px-3 py-3 placeholder-gray-400 text-gray-700 bg-white rounded text-sm shadow focus:outline-none focus:shadow-outline w-full ease-linear transition-all duration-150"
                     rows="4"
-                    defaultValue={JSON.stringify(user, null, 3)}
-                  ></textarea>
+	  				value={ JSON.stringify(userMetadata, null, 4) }
+                  >
+	              </textarea>
                 </div>
               </div>
             </div>

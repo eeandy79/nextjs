@@ -18,7 +18,7 @@ function MyApp({ Component, pageProps }) {
         domain={process.env.NEXT_PUBLIC_DOMAIN}
         clientId={process.env.NEXT_PUBLIC_CLIENT_ID}
         audience={process.env.NEXT_PUBLIC_AUDIENCE}
-        scope="read:users"
+        scope="read:current_user update:current_user_metadata"
         redirectUri={process.env.NEXT_PUBLIC_CALLBACK}
         onRedirectCallback={onRedirectCallback}
       >
