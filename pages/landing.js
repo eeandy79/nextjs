@@ -27,13 +27,12 @@ export default function Landing() {
             <div className="items-center flex flex-wrap">
               <div className="w-full lg:w-6/12 px-4 ml-auto mr-auto text-center">
                 <div className="pr-12">
-                  <h1 className="text-white font-semibold text-5xl">
-                    Your story starts with us.
+                  <h1 className="text-white font-semibold text-4xl">
+                    Share and monetize your online video content should be secure and easy
                   </h1>
                   <p className="mt-4 text-lg text-gray-300">
-                    This is a simple example of a Landing Page you can build
-                    using Notus NextJS. It features multiple CSS components
-                    based on the Tailwind CSS design system.
+                    Your online video content are free from piracy 
+                    and unauthorized access protected by Hollywood level media encryption.
                   </p>
                 </div>
               </div>
@@ -69,10 +68,9 @@ export default function Landing() {
                     <div className="text-white p-3 text-center inline-flex items-center justify-center w-12 h-12 mb-5 shadow-lg rounded-full bg-red-400">
                       <i className="fas fa-award"></i>
                     </div>
-                    <h6 className="text-xl font-semibold">Awarded Agency</h6>
+                    <h6 className="text-xl font-semibold">Sales pitching</h6>
                     <p className="mt-2 mb-4 text-gray-600">
-                      Divide details about your product or agency work into
-                      parts. A paragraph describing a feature will be enough.
+                    Share your sales video contents with confidential information securely with your customers when you can't meet them in person. You can control which customers and how many times they are allowed to watch the video contents.
                     </p>
                   </div>
                 </div>
@@ -84,10 +82,9 @@ export default function Landing() {
                     <div className="text-white p-3 text-center inline-flex items-center justify-center w-12 h-12 mb-5 shadow-lg rounded-full bg-blue-400">
                       <i className="fas fa-retweet"></i>
                     </div>
-                    <h6 className="text-xl font-semibold">Free Revisions</h6>
+                    <h6 className="text-xl font-semibold">Performing Arts</h6>
                     <p className="mt-2 mb-4 text-gray-600">
-                      Keep you user engaged by providing meaningful information.
-                      Remember that by this time, the user is curious.
+                    Move your business online to monetize and reach your worldwide audience. Your video contents are end to end encrypted and protected from piracy and unauthorized access.
                     </p>
                   </div>
                 </div>
@@ -99,10 +96,9 @@ export default function Landing() {
                     <div className="text-white p-3 text-center inline-flex items-center justify-center w-12 h-12 mb-5 shadow-lg rounded-full bg-green-400">
                       <i className="fas fa-fingerprint"></i>
                     </div>
-                    <h6 className="text-xl font-semibold">Verified Company</h6>
+                    <h6 className="text-xl font-semibold">What we do</h6>
                     <p className="mt-2 mb-4 text-gray-600">
-                      Write a few lines about each one. A paragraph describing a
-                      feature will be enough. Keep you user engaged!
+                      Video contents hosted on securevideo.io are end to end encrypted with multi-DRM technology. We protect your contents from piracy and unauthorized access.
                     </p>
                   </div>
                 </div>
@@ -115,24 +111,11 @@ export default function Landing() {
                   <i className="fas fa-user-friends text-xl"></i>
                 </div>
                 <h3 className="text-3xl mb-2 font-semibold leading-normal">
-                  Working with us is a pleasure
+                  What we believe in
                 </h3>
                 <p className="text-lg font-light leading-relaxed mt-4 mb-4 text-gray-700">
-                  Don't let your uses guess by attaching tooltips and popoves to
-                  any element. Just make sure you enable them first via
-                  JavaScript.
+                  Secure video communication is crucial to all of us, especially after the COVID-19 breakout. We believe your business needs a secure way to share or monetize from your online video contents.
                 </p>
-                <p className="text-lg font-light leading-relaxed mt-0 mb-4 text-gray-700">
-                  The kit comes with three pre-built pages to help you get
-                  started faster. You can change the text and images and you're
-                  good to go. Just make sure you enable them first via
-                  JavaScript.
-                </p>
-                <Link href="/">
-                  <a href="#pablo" className="font-bold text-gray-800 mt-8">
-                    Check Notus NextJS!
-                  </a>
-                </Link>
               </div>
 
               <div className="w-full md:w-4/12 px-4 mr-auto ml-auto">
@@ -262,11 +245,9 @@ export default function Landing() {
           <div className="container mx-auto px-4">
             <div className="flex flex-wrap justify-center text-center mb-24">
               <div className="w-full lg:w-6/12 px-4">
-                <h2 className="text-4xl font-semibold">Here are our heroes</h2>
+                <h2 className="text-4xl font-semibold">Team</h2>
                 <p className="text-lg leading-relaxed m-4 text-gray-600">
-                  According to the National Oceanic and Atmospheric
-                  Administration, Ted, Scambos, NSIDClead scentist, puts the
-                  potentially record maximum.
+                  We are a group of video engineers and security experts building an all-in-one secure video hosting platform.
                 </p>
               </div>
             </div>
