@@ -2,6 +2,7 @@ import Head from 'next/head'
 import Router from 'next/router';
 import styles from '../styles/Home.module.css'
 import IndexNavbar from "../components/Navbars/IndexNavbar.js";
+import Landing from "./landing.js"
 import Dashboard from "./admin/dashboard.js";
 import { useAuth0 } from "@auth0/auth0-react";
 import {
@@ -109,17 +110,6 @@ function Index() {
           </a>
         </div>
       </main>
-
-      <footer className={styles.footer}>
-        <a
-          href="https://vercel.com?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Powered by{' '}
-          <img src="/vercel.svg" alt="Vercel Logo" className={styles.logo} />
-        </a>
-      </footer>
     </div>
 		</>
   )
@@ -136,7 +126,11 @@ export default function Home() {
     if (isAuthenticated) {
       return <Dashboard/>
     } else {
-      return <Index/>
+      return (
+       <>
+       <Landing/>
+       </>
+      )
     }
   }
   return <div>Loading...</div>
