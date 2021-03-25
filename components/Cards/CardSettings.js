@@ -4,6 +4,38 @@ import React, { useState, useEffect } from "react";
 import { useAuth0 } from "@auth0/auth0-react";
 import console from "console"
 
+async function fetchGraphQL(operationsDoc, operationName, variables, accessToken) {
+	const result = await fetch(
+		"https://square-swan-44.hasura.app/v1/graphql",
+		{
+			method: "POST",
+			headers: {
+				'Authorization': 'Bearer ' + accessToken,
+			},
+			body: JSON.stringify({
+				query: operationsDoc,
+				variables: variables
+			})
+		}
+	);
+
+	const rv = await result.json();
+	console.log(JSON.stringify(rv, null, 2));
+	return rv;
+}
+
+const operationsDoc = `{ users { id name } }`;
+
+function fetchUnnamedQuery1(access_token) {
+	return fetchGraphQL(
+		operationsDoc,
+		"unnamedQuery1",
+		null,
+		access_token
+	);
+}
+
+
 export default function CardSettings() {
 	const { user, isAuthenticated, getAccessTokenSilently } = useAuth0();
 	const [userMetadata, setUserMetadata] = useState(null);
@@ -25,6 +57,8 @@ export default function CardSettings() {
 						Authorization: `Bearer ${accessToken}`,
 					},
 				});
+				console.log(accessToken);
+				fetchUnnamedQuery1(accessToken);
 
 				const { user_metadata } = await metadataResponse.json();
 				console.log(user_metadata);
