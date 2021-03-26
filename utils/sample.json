@@ -1,0 +1,75 @@
+{
+	"ops": [
+		{
+			"insert": "Description"
+		},
+		{
+			"attributes": {
+				"header": 1
+			},
+			"insert": "\n"
+		},
+		{
+			"insert": "\n"
+		},
+		{
+			"attributes": {
+				"bold": true
+			},
+			"insert": "Live online performance by actors from across six locations around the world"
+		},
+		{
+			"attributes": {
+				"header": 3
+			},
+			"insert": "\n"
+		},
+		{
+			"attributes": {
+				"bold": true
+			},
+			"insert": "A chilling adaptation of the literary existentialist classic in times of real-life global crisis"
+		},
+		{
+			"attributes": {
+				"header": 3
+			},
+			"insert": "\n"
+		},
+		{
+			"insert": "\nA deadly plague strikes, no one in the city is immune, a large part of the population is wiped out. After the apocalypse, six survivors testify before a tribunal, each offering a different account of the life-and-death crisis. How do individuals and the community as a whole struggle for survival? Can life revert to what it was before?  \n\nSix actors from six locations around the world perform live online with live music; their starkly different living conditions displayed during the performance. The current worldwide pandemic adds an alarmingly keen sense of reality, crisis and relevance to this production.\n\nThe Plague premiered in London in 2017, written and directed by British playwright Neil Bartlett. This chillingly ruminative production is directed by award-winning Chinese director Wang Chong, founder of the leading avant-garde Théatre du Rêve Expérimental. Wang directed an online production of Waiting for Godot during the lockdown of Wuhan in 2020, with a whopping 290,000 viewers. The 49th HKAF also presents a Cantonese-language production of The Plague which compels us to take a long, hard look at the outside world and our inner selves during a critical time rife with fear and uncertainties.\n\nPerformed in English with English and Chinese subtitles\nApprox 1 hr 15 mins with no interval\n\n"
+		},
+		{
+			"attributes": {
+				"background": "#ffffff",
+				"link": "https://go.hkaf.org/49hkaf-hp14"
+			},
+			"insert": "Read the House Programme Here."
+		},
+		{
+			"insert": "\n\n"
+		},
+		{
+			"attributes": {
+				"background": "#ffffff",
+				"bold": true
+			},
+			"insert": "Remarks"
+		},
+		{
+			"attributes": {
+				"header": 3
+			},
+			"insert": "\n"
+		},
+		{
+			"attributes": {
+				"background": "#ffffff"
+			},
+			"insert": "This programme is restricted to Hong Kong only."
+		},
+		{
+			"insert": "\n\n"
+		}
+	]
+}
