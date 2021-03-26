@@ -41,7 +41,6 @@
 		},
 		{
 			"attributes": {
-				"background": "#ffffff",
 				"link": "https://go.hkaf.org/49hkaf-hp14"
 			},
 			"insert": "Read the House Programme Here."
@@ -51,7 +50,6 @@
 		},
 		{
 			"attributes": {
-				"background": "#ffffff",
 				"bold": true
 			},
 			"insert": "Remarks"
@@ -64,7 +62,6 @@
 		},
 		{
 			"attributes": {
-				"background": "#ffffff"
 			},
 			"insert": "This programme is restricted to Hong Kong only."
 		},

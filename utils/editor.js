@@ -51,12 +51,9 @@ export default class Editor extends React.Component {
 			<ReactQuill
 				ref={(el) => { this.reactQuillRef = el }}
 				defaultValue = { new Delta(sample) }
-				modules={{"toolbar": false}}
-				readOnly
+				modules={{"toolbar": true}}
 				theme={'snow'}
 			/>
-			<button onClick={this.insertText}>Insert Text</button>
-			<button onClick={this.getText}>Get Text</button>
 			</div>
 		)
 	}
