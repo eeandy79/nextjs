@@ -45,12 +45,20 @@ export default class Editor extends React.Component {
 		}
 	}
 
+	setContents = (c) => {
+		this.quillRef.setContents(new Delta(JSON.parse(c)));
+	}
+
+	
+	getContents = () => {
+		return this.quillRef.getContents();
+	}
+
 	render() {
 		return (
 			<div>
 			<ReactQuill
 				ref={(el) => { this.reactQuillRef = el }}
-				defaultValue = { new Delta(sample) }
 				modules={{"toolbar": true}}
 				theme={'snow'}
 			/>

@@ -4,46 +4,43 @@ import React, { useState, useEffect } from "react";
 import { useAuth0 } from "@auth0/auth0-react";
 import console from "console"
 import Editor from "utils/editor.js"
+import { ApolloClient, InMemoryCache } from '@apollo/client';
+import { gql, useMutation } from '@apollo/client';
 
-async function fetchGraphQL(operationsDoc, operationName, variables, accessToken) {
-	const result = await fetch(
-		"https://square-swan-44.hasura.app/v1/graphql",
-		{
-			method: "POST",
-			headers: {
-				'Authorization': 'Bearer ' + accessToken,
-			},
-			body: JSON.stringify({
-				query: operationsDoc,
-				variables: variables
-			})
-		}
-	);
+const UPDATE_USERS = gql`
+  mutation update_users($_set: users_set_input, $where: users_bool_exp!) {
+    update_users(_set: $_set, where: $where) {
+			returning {
+        id
+        desc
+      }
+    }
+  }
+`;
 
-	const rv = await result.json();
-	console.log(JSON.stringify(rv, null, 2));
-	return rv;
-}
-
-const operationsDoc = `{ users { id name } }`;
-
-function fetchUnnamedQuery1(access_token) {
-	return fetchGraphQL(
-		operationsDoc,
-		"unnamedQuery1",
-		null,
-		access_token
-	);
-}
-
+const client = new ApolloClient({
+	uri: "https://square-swan-44.hasura.app/v1/graphql",
+	cache: new InMemoryCache()
+});
 
 export default function CardSettings() {
 	const { user, isAuthenticated, getAccessTokenSilently } = useAuth0();
 	const [userMetadata, setUserMetadata] = useState(null);
-	var editorRef = React.createRef();
+	const [accessToken, setAccessToken] = useState(null);
+  const [content, setContent] = useState(null);
+	const [editor, setEditor] = useState(null);
 
-	var setEdit = () => {
-		editorRef.setEdit();
+	const [updateUsers] = useMutation(UPDATE_USERS, { client: client} );
+
+	var save = () => {
+		updateUsers({ 
+			variables: {_set: { desc: JSON.stringify(editor.getContents()) }, where: {}},
+			context: {
+				headers: {
+					Authorization: "Bearer " + accessToken
+				}
+			}
+		}).then(result => console.log(result));
 	};
 
 	useEffect(() => {
@@ -51,32 +48,48 @@ export default function CardSettings() {
 			const domain = process.env.NEXT_PUBLIC_DOMAIN;
 
 			try {
-				const accessToken = await getAccessTokenSilently({
+				const token = await getAccessTokenSilently({
 					audience: `https://${domain}/api/v2/`,
 					scope: "read:current_user",
 				});
+				//console.log(token);
+				setAccessToken(token);
 
-				const userDetailsByIdUrl = `https://${domain}/api/v2/users/${user.sub}`;
-
-				const metadataResponse = await fetch(userDetailsByIdUrl, {
-					headers: {
-						Authorization: `Bearer ${accessToken}`,
+				client.query({
+					context: {
+						headers: {
+							Authorization: "Bearer " + token
+						}
 					},
+					query: gql`
+						query {
+							users {
+								id
+								desc
+							}
+						}
+					`
+				}).then((result) => {
+					console.log("content loaded...");
+					const c = result["data"]["users"][0]["desc"];
+					setContent(c);
 				});
-				console.log(accessToken);
-				fetchUnnamedQuery1(accessToken);
 
-				const { user_metadata } = await metadataResponse.json();
-				console.log(user_metadata);
-
-				setUserMetadata(user_metadata);
 			} catch (e) {
-				console.log(e.message);
+				console.log("error: " + e.message);
 			}
 		};
 
 		getUserMetadata();
+
 	}, []);
+
+	useEffect(() => {
+		if (editor && content) {
+			console.log("editor and content good");
+			editor.setContents(content);
+		}
+	}, [editor, content]);
 
   return (
     <>
@@ -263,7 +276,7 @@ export default function CardSettings() {
               <div className="w-full lg:w-12/12 px-4">
                 <div className="relative w-full mb-3">
                   <Editor
-	                ref={(el) => {editorRef=el}}
+	                ref={(el) => {setEditor(el)}}
                     className="px-3 py-3 placeholder-gray-400 text-gray-700 bg-white rounded text-sm shadow focus:outline-none focus:shadow-outline w-full ease-linear transition-all duration-150"
                   >
                   </Editor>
@@ -275,9 +288,9 @@ export default function CardSettings() {
 				<button
 					className="bg-gray-800 active:bg-gray-700 text-white font-bold uppercase text-xs px-4 py-2 rounded shadow hover:shadow-md outline-none focus:outline-none mr-1 ease-linear transition-all duration-150"
 					type="button"
-	  				onClick={()=>{}}
+	  				onClick={save}
 				>
-				Edit
+				Save
 				</button>
 			  </div>
 	        </div>
