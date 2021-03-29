@@ -1,5 +1,6 @@
 import React from "react";
 import PropTypes from "prop-types";
+import Link from 'next/link';
 
 // components
 
@@ -17,10 +18,10 @@ function RenderTableData(events, color) {
 
 function OneRow(event, color, index) {
 	const { title, start_datetime, end_datetime, desc } = event;
-	var _title = (title.length > MAX_TITLE_LENGTH)?title.substring(0,MAX_TITLE_LENGTH).concat("..."):title;
+	var _title = title;
+	//(title.length > MAX_TITLE_LENGTH)?title.substring(0,MAX_TITLE_LENGTH).concat("..."):title;
 	var date = new moment(start_datetime);
 	console.log(date.format('dddd DD-MMM-YYYY hh:mm:ss'));
-        //<th className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-no-wrap p-4 text-left flex items-center">
 
 	return (
       <tr key={index}>
@@ -77,10 +78,6 @@ function TableHeaderItem(title, color) {
 }
 
 export default function CardTable({ color }) {
-	console.log(sample["events"].length);
-	sample["events"].forEach(item => {
-		console.log(item)
-	})
   return (
     <>
       <div
@@ -90,17 +87,16 @@ export default function CardTable({ color }) {
         }
       >
         <div className="rounded-t mb-0 px-4 py-3 border-0">
-          <div className="flex flex-wrap items-center">
-            <div className="relative w-full max-w-full flex-grow flex-1">
-              <h3
-                className={
-                  "font-semibold text-lg " +
-                  (color === "light" ? "text-gray-800" : "text-white")
-                }
+          <div className="text-center flex justify-between">
+              <h3 className="font-bold text-xl text-gray-800">Events</h3>
+	  		  <Link href="newevent">
+              <button
+                className="bg-gray-800 active:bg-gray-700 text-white font-bold uppercase text-xs px-4 py-2 rounded shadow hover:shadow-md outline-none focus:outline-none mr-1 ease-linear transition-all duration-150"
+                type="button"
               >
-                Events
-              </h3>
-            </div>
+              <i className="fas fa-plus-circle"></i> Create
+              </button>
+	  		  </Link>
           </div>
         </div>
         <div className="block w-full overflow-x-auto">
