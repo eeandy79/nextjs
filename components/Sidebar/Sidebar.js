@@ -156,7 +156,7 @@ export default function Sidebar() {
                           : "text-gray-400")
                       }
                     ></i>{" "}
-                    Tables
+                    Events
                   </a>
                 </Link>
               </li>
@@ -180,7 +180,7 @@ export default function Sidebar() {
                           : "text-gray-400")
                       }
                     ></i>{" "}
-                    Maps
+                    Library
                   </a>
                 </Link>
               </li>

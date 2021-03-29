@@ -42,7 +42,7 @@ const NotificationDropdown = () => {
           }
           onClick={(e) => e.preventDefault()}
         >
-          Action
+          <i className="fas fa-edit"></i> Edit
         </a>
         <a
           href="#pablo"
@@ -51,7 +51,7 @@ const NotificationDropdown = () => {
           }
           onClick={(e) => e.preventDefault()}
         >
-          Another action
+          <i className="fas fa-trash-alt"></i> Delete
         </a>
         <a
           href="#pablo"
@@ -60,7 +60,7 @@ const NotificationDropdown = () => {
           }
           onClick={(e) => e.preventDefault()}
         >
-          Something else here
+          <i className="fas fa-external-link-alt"></i> Preview
         </a>
       </div>
     </>
