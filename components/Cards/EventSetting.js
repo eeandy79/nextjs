@@ -6,11 +6,7 @@ import console from "console"
 import Editor from "utils/editor.js"
 import { ApolloClient, InMemoryCache } from '@apollo/client';
 import { gql, useMutation } from '@apollo/client';
-import {
-	  MuiPickersUtilsProvider,
-	  KeyboardTimePicker,
-	  KeyboardDatePicker,
-} from '@material-ui/pickers';
+import { useRouter } from 'next/router'
 
 const UPDATE_USERS = gql`
   mutation update_users($_set: users_set_input, $where: users_bool_exp!) {
@@ -34,6 +30,7 @@ export default function EventSetting() {
 	const [accessToken, setAccessToken] = useState(null);
 	const [user, setUser] = useState(null);
 	const [editor, setEditor] = useState(null);
+  const router = useRouter();
 
 	const [updateUsers] = useMutation(UPDATE_USERS, { client: client} );
 
@@ -104,8 +101,20 @@ export default function EventSetting() {
   return (
     <>
       <div className="relative flex flex-col min-w-0 break-words w-full mb-6 shadow-lg rounded-lg bg-gray-200 border-0">
-        <div className="rounded-t bg-white mb-0 px-6 py-6">
+        <div className="rounded-t bg-white mb-0 px-4 py-3">
           <div className="text-center flex justify-between">
+	       <button
+              className="bg-gray-800 active:bg-gray-700 text-white font-bold uppercase text-xs px-4 py-2 rounded shadow hover:shadow-md outline-none focus:outline-none mr-1 ease-linear transition-all duration-150"
+              type="button"
+	          onClick={()=>{
+							router.push({
+								pathname: '/admin/tables',
+							})
+						}}
+            >
+              Back
+            </button>
+
             <h6 className="text-gray-800 text-xl font-bold">Event Configuration</h6>
 	       <button
               className="bg-gray-800 active:bg-gray-700 text-white font-bold uppercase text-xs px-4 py-2 rounded shadow hover:shadow-md outline-none focus:outline-none mr-1 ease-linear transition-all duration-150"

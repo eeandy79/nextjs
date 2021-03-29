@@ -1,6 +1,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 import Link from 'next/link';
+import { useRouter } from 'next/router'
 
 // components
 
@@ -25,7 +26,7 @@ function OneRow(event, color, index) {
 
 	return (
       <tr key={index}>
-          <th className="align-middle text-xs whitespace-no-wrap p-4 text-left flex items-center">
+          <th className="align-middle text-xs p-4 text-left flex items-center">
           <span
             className={
               "ml-3 font-bold " +
@@ -77,9 +78,10 @@ function TableHeaderItem(title, color) {
 	)
 }
 
-export default function CardTable({ color }) {
+function EventList({ color }) {
+  const router = useRouter();
+
   return (
-    <>
       <div
         className={
           "relative flex flex-col min-w-0 break-words w-full mb-6 shadow-lg rounded " +
@@ -89,14 +91,18 @@ export default function CardTable({ color }) {
         <div className="rounded-t mb-0 px-4 py-3 border-0">
           <div className="text-center flex justify-between">
               <h3 className="font-bold text-xl text-gray-800">Events</h3>
-	  		  <Link href="newevent">
               <button
                 className="bg-gray-800 active:bg-gray-700 text-white font-bold uppercase text-xs px-4 py-2 rounded shadow hover:shadow-md outline-none focus:outline-none mr-1 ease-linear transition-all duration-150"
                 type="button"
+								onClick={() => {
+									router.push({
+										pathname: '/admin/tables',
+										query: { create: true },
+									})
+								}}
               >
               <i className="fas fa-plus-circle"></i> Create
               </button>
-	  		  </Link>
           </div>
         </div>
         <div className="block w-full overflow-x-auto">
@@ -117,8 +123,13 @@ export default function CardTable({ color }) {
           </table>
         </div>
       </div>
-    </>
   );
+}
+
+export default function CardTable({ color }) {
+	return (
+		<EventList color={color}/>
+	)
 }
 
 CardTable.defaultProps = {
