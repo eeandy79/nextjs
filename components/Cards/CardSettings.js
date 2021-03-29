@@ -10,7 +10,7 @@ import { gql, useMutation } from '@apollo/client';
 const UPDATE_USERS = gql`
   mutation update_users($_set: users_set_input, $where: users_bool_exp!) {
     update_users(_set: $_set, where: $where) {
-			returning {
+	returning {
         id
         desc
       }
@@ -24,16 +24,16 @@ const client = new ApolloClient({
 });
 
 export default function CardSettings() {
-	const { user, isAuthenticated, getAccessTokenSilently } = useAuth0();
+	const { isAuthenticated, getAccessTokenSilently } = useAuth0();
 	const [userMetadata, setUserMetadata] = useState(null);
 	const [accessToken, setAccessToken] = useState(null);
-  const [content, setContent] = useState(null);
+	const [user, setUser] = useState(null);
 	const [editor, setEditor] = useState(null);
 
 	const [updateUsers] = useMutation(UPDATE_USERS, { client: client} );
 
 	var save = () => {
-		updateUsers({ 
+		updateUsers({
 			variables: {_set: { desc: JSON.stringify(editor.getContents()) }, where: {}},
 			context: {
 				headers: {
@@ -65,14 +65,13 @@ export default function CardSettings() {
 						query {
 							users {
 								id
+								email
 								desc
 							}
 						}
 					`
 				}).then((result) => {
-					console.log("content loaded...");
-					const c = result["data"]["users"][0]["desc"];
-					setContent(c);
+					setUser(result["data"]["users"][0]);
 				});
 
 			} catch (e) {
@@ -85,11 +84,10 @@ export default function CardSettings() {
 	}, []);
 
 	useEffect(() => {
-		if (editor && content) {
-			console.log("editor and content good");
-			editor.setContents(content);
+		if (user && editor) {
+			editor.setContents(user["desc"]);
 		}
-	}, [editor, content]);
+	}, [editor, user]);
 
   return (
     <>
@@ -137,7 +135,7 @@ export default function CardSettings() {
                   <input
                     type="email"
                     className="px-3 py-3 placeholder-gray-400 text-gray-700 bg-white rounded text-sm shadow focus:outline-none focus:shadow-outline w-full ease-linear transition-all duration-150"
-                    defaultValue={user.email}
+                    defaultValue={user?user["email"]:""}
                   />
                 </div>
               </div>
