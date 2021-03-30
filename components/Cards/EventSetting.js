@@ -1,41 +1,18 @@
 import React, { useState, useEffect } from "react";
-
-// components
 import { useAuth0 } from "@auth0/auth0-react";
 import console from "console"
 import Editor from "utils/editor.js"
-import { ApolloClient, InMemoryCache } from '@apollo/client';
-import { gql, useMutation } from '@apollo/client';
+import HasuraProxy from "utils/hasura_proxy.js"
 import { useRouter } from 'next/router'
 
-const UPDATE_USERS = gql`
-  mutation update_users($_set: users_set_input, $where: users_bool_exp!) {
-    update_users(_set: $_set, where: $where) {
-	returning {
-        id
-        desc
-      }
-    }
-  }
-`;
-
-const client = new ApolloClient({
-	uri: "https://square-swan-44.hasura.app/v1/graphql",
-	cache: new InMemoryCache()
-});
+const proxy = new HasuraProxy("https://square-swan-44.hasura.app/v1/graphql");
 
 export default function EventSetting() {
-	const { isAuthenticated, getAccessTokenSilently } = useAuth0();
-	const [userMetadata, setUserMetadata] = useState(null);
-	const [accessToken, setAccessToken] = useState(null);
-	const [user, setUser] = useState(null);
-	const [editor, setEditor] = useState(null);
-	const [eventTitle, setEventTitle] = useState("");
-	const [eventDetails, setEventDetails] = useState(null);
 	const router = useRouter();
-
-	const [updateUsers] = useMutation(UPDATE_USERS, { client: client} );
-
+	const { isAuthenticated, getAccessTokenSilently } = useAuth0();
+	const [accessToken, setAccessToken] = useState(null);
+	const [editor, setEditor] = useState(null);
+	const [eventDetails, setEventDetails] = useState(null);
 	const [selectedDate, setSelectedDate] = React.useState(new Date('2014-08-18T21:11:54'));
 
 	const handleDateChange = (date) => {
@@ -43,18 +20,13 @@ export default function EventSetting() {
 	};
 
 	var save = () => {
-		updateUsers({
-			variables: {_set: { desc: JSON.stringify(editor.getContents()) }, where: {}},
-			context: {
-				headers: {
-					Authorization: "Bearer " + accessToken
-				}
-			}
-		}).then(result => console.log(result));
+		var _e = Object.assign({}, eventDetails);
+		_e["desc"] = JSON.stringify(editor.getContents());
+		proxy.updateEvent(_e, accessToken).then(result => console.log(result));
 	};
 
 	useEffect(() => {
-		const getUserMetadata = async () => {
+		const getToken = async () => {
 			const domain = process.env.NEXT_PUBLIC_DOMAIN;
 
 			try {
@@ -62,76 +34,32 @@ export default function EventSetting() {
 					audience: `https://${domain}/api/v2/`,
 					scope: "read:current_user",
 				});
-				//console.log(token);
 				setAccessToken(token);
-
-				client.query({
-					context: {
-						headers: {
-							Authorization: "Bearer " + token
-						}
-					},
-					query: gql`
-						query {
-							users {
-								id
-								email
-								desc
-							}
-						}
-					`
-				}).then((result) => {
-					setUser(result["data"]["users"][0]);
-				});
+				console.log(token);
 
 			} catch (e) {
 				console.log("error: " + e.message);
 			}
 		};
-
-		getUserMetadata();
-
+		getToken();
 	}, []);
 
 	useEffect(() => {
-			/*
-		if (user && editor) {
-			console.log("user:");
-			editor.setContents(user["desc"]);
-		}
-		*/
 		var query = router.query;
 		if (query && query.hasOwnProperty("event_id") && accessToken) {
 				const {event_id} = query;
-
-				const query_event = gql`
-				query query_events($where: events_bool_exp) {
-						events(where: $where) {
-								desc
-								end_datetime
-								id
-								start_datetime
-								title
-						}
+				try {
+					proxy.getEvent(event_id, accessToken).then((result) => {
+							var _e = result["data"]["events"][0];
+							//console.log(_e);
+							setEventDetails(_e);
+							editor.setContents(_e["desc"]);
+					});
+				} catch (e) {
+					console.log("error: " + e.message);
 				}
-				`;
-
-				client.query({
-					context: {
-						headers: {
-							Authorization: "Bearer " + accessToken
-						}
-					},
-					variables: { where: {id: {_eq: event_id}}},
-					query: query_event
-				}).then((result) => {
-						var _e = result["data"]["events"][0];
-						console.log(_e["desc"]);
-						setEventDetails(_e);
-						editor.setContents(_e["desc"]);
-				});
 		}
-	}, [editor, user, router]);
+	}, [editor, router, proxy, accessToken]);
 
   return (
     <>
