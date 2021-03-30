@@ -15,19 +15,21 @@ import { withAuthenticationRequired } from "@auth0/auth0-react";
 
 export default withAuthenticationRequired(function Tables() {
   const router = useRouter()
-  console.log(router.query);
-	console.log(router.query.hasOwnProperty("create"));
   const [query, setQuery] = useState(null);
+
+	if (query) {
+		console.log(Object.keys(query).length);
+	}
 
 	useEffect(() => {
 		setQuery(router.query);
 	}, [router]);
-  
+
   return (
     <Admin>
       <div className="flex flex-wrap mt-4">
         <div className="w-full mb-12 px-4">
-					{query && query.hasOwnProperty("create") ? (
+					{query && Object.keys(query).length ? (
 						<EventSetting/>
 					) : (
           	<CardTable/>

@@ -46,10 +46,13 @@ export default class Editor extends React.Component {
 	}
 
 	setContents = (c) => {
-		this.quillRef.setContents(new Delta(JSON.parse(c)));
+		try {
+			this.quillRef.setContents(new Delta(JSON.parse(c)));
+		} catch (e) {
+			console.log(e);
+		}
 	}
 
-	
 	getContents = () => {
 		return this.quillRef.getContents();
 	}

@@ -25,7 +25,7 @@ function OneRow(event, color, index) {
 	console.log(date.format('dddd DD-MMM-YYYY hh:mm:ss'));
 
 	return (
-      <tr key={index}>
+      <tr key={event.id}>
           <th className="align-middle text-xs p-4 text-left flex items-center">
           <span
             className={
@@ -57,7 +57,7 @@ function OneRow(event, color, index) {
           </div>
         </td>
         <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-no-wrap p-4 text-right">
-          <TableDropdown />
+          <TableDropdown event_id={event.id} />
         </td>
       </tr>
 	)

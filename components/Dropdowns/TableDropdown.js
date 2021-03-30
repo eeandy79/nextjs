@@ -1,9 +1,13 @@
 import React from "react";
+import Link from 'next/link'
 import { createPopper } from "@popperjs/core";
+import { useRouter } from 'next/router';
+import { withAuthenticationRequired } from "@auth0/auth0-react";
 
-const NotificationDropdown = () => {
-  // dropdown props
+export default withAuthenticationRequired(function NotificationDropdown(input) {
+	const router = useRouter();
   const [dropdownPopoverShow, setDropdownPopoverShow] = React.useState(false);
+	const {event_id} = input;
   const btnDropdownRef = React.createRef();
   const popoverDropdownRef = React.createRef();
   const openDropdownPopover = () => {
@@ -35,15 +39,21 @@ const NotificationDropdown = () => {
           "bg-white text-base z-50 float-left py-2 list-none text-left rounded shadow-lg min-w-48"
         }
       >
+			  <Link href="#">
         <a
-          href="#pablo"
           className={
             "text-sm py-2 px-4 font-normal block w-full whitespace-no-wrap bg-transparent text-gray-800"
           }
-          onClick={(e) => e.preventDefault()}
+          onClick={() => {
+						router.push({
+							pathname: '/admin/tables',
+							query: { event_id: event_id },
+						})
+					}}
         >
-          <i className="fas fa-edit"></i> Edit
+          <i className="fas fa-edit"></i> Load
         </a>
+				</Link>
         <a
           href="#pablo"
           className={
@@ -65,6 +75,4 @@ const NotificationDropdown = () => {
       </div>
     </>
   );
-};
-
-export default NotificationDropdown;
+});

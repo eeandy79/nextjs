@@ -1,18 +1,21 @@
 {
 	"events": [
 		{
+			"id": "20527063-f847-4e2f-8232-d6d80e1c7247",
 			"title": "Live Streaming Service – SEM Holdings Limited (Stock Code: 9929)",
 			"start_datetime": "2021-03-29T03:45:59.805857+00:00",
 			"end_datetime": null,
 			"desc": "def"
 		},
 		{
+			"id": "45063fc5-6da5-4049-be96-301120c51690",
 			"title": "Guangdong-Hong Kong-Macao Greater Bay Area Entrepreneurship Seminar - Latest Development of Start-up",
 			"start_datetime": "2021-03-29T03:45:59.805857+00:00",
 			"end_datetime": null,
 			"desc": "bbb"
 		},
 		{
+			"id": "74d4db6c-d9c7-44e0-afa5-edca3e29765f",
 			"title": "Hong Kong Startup Council - 4th STARS Programme, Meet and Greet our STARS",
 			"start_datetime": "2021-03-29T03:45:59.805857+00:00",
 			"end_datetime": null,
