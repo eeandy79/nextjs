@@ -54,7 +54,16 @@ export default class HasuraProxy {
 					Authorization: "Bearer " + accessToken
 				}
 			},
-			variables: { _set: { desc: eventDetails["desc"] }, where: {id: {_eq: eventDetails["id"]}}},
+			variables: {
+        _set: {
+          start_datetime: eventDetails["start_datetime"],
+          end_datetime: eventDetails["end_datetime"],
+          desc: eventDetails["desc"]
+        },
+        where: {
+          id: {_eq: eventDetails["id"]}
+        }
+      },
 			mutation: UPDATE_EVENT
 		});
 	}

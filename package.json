@@ -28,6 +28,7 @@
     "moment": "2.29.1",
     "react-overlay-loader": "0.0.3",
     "react-notifications": "1.7.2",
+    "react-datetime": "3.0.3",
     "tailwindcss": "1.8.10"
   }
 }

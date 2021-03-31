@@ -8,6 +8,10 @@ import { LoadingOverlay, Loader } from "react-overlay-loader";
 import 'react-overlay-loader/styles.css';
 import {NotificationContainer, NotificationManager} from 'react-notifications';
 import 'react-notifications/lib/notifications.css';
+import Datetime from 'react-datetime';
+import "react-datetime/css/react-datetime.css";
+import moment from 'moment';
+
 
 const proxy = new HasuraProxy("https://square-swan-44.hasura.app/v1/graphql");
 
@@ -17,18 +21,29 @@ export default function EventSetting() {
 	const [accessToken, setAccessToken] = useState(null);
 	const [editor, setEditor] = useState(null);
 	const [eventDetails, setEventDetails] = useState(null);
-	const [selectedDate, setSelectedDate] = React.useState(new Date('2014-08-18T21:11:54'));
   const [saving, setSaving] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
+  const [startTime, setStartTime] = useState(null);
+  const [endTime, setEndTime] = useState(null);
 
 	const handleDateChange = (date) => {
 		setSelectedDate(date);
 	};
 
+  var updateStartTime = (d) => {
+    setStartTime(d);
+  }
+
+  var updateEndTime = (d) => {
+    setEndTime(d);
+  }
+
 	var save = () => {
     setIsLoading(true);
     setSaving(true);
 		var _e = Object.assign({}, eventDetails);
+    _e["start_datetime"] = startTime.toISOString();
+    _e["end_datetime"] = endTime.toISOString();
 		_e["desc"] = JSON.stringify(editor.getContents());
 		proxy.updateEvent(_e, accessToken).then(result => console.log(result));
     setIsLoading(false);
@@ -63,6 +78,9 @@ export default function EventSetting() {
 					proxy.getEvent(event_id, accessToken).then((result) => {
 							var _e = result["data"]["events"][0];
 							setEventDetails(_e);
+              //console.log(_e);
+              setStartTime(moment(_e["start_datetime"]));
+              setEndTime(moment(_e["end_datetime"]));
 							editor.setContents(_e["desc"]);
 					});
           setIsLoading(false);
@@ -134,12 +152,11 @@ export default function EventSetting() {
                   >
                     Start Time
                   </label>
-                  <input
-                    type="text"
+                  <Datetime
                     className="px-3 py-3 placeholder-gray-400 text-gray-700 bg-white rounded text-sm shadow focus:outline-none focus:shadow-outline w-full ease-linear transition-all duration-150"
-                    defaultValue="xxx"
+                    onChange={updateStartTime}
+                    value={startTime}
                   />
-
 	            </div>
               </div>
               <div className="w-full lg:w-4/12 px-4">
@@ -150,10 +167,10 @@ export default function EventSetting() {
                   >
                     End Time
                   </label>
-                  <input
-                    type="text"
+                  <Datetime
                     className="px-3 py-3 placeholder-gray-400 text-gray-700 bg-white rounded text-sm shadow focus:outline-none focus:shadow-outline w-full ease-linear transition-all duration-150"
-                    defaultValue="yyy"
+                    onChange={updateEndTime}
+                    value={endTime}
                   />
                 </div>
               </div>
