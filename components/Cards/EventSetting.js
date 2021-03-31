@@ -12,8 +12,7 @@ import Datetime from 'react-datetime';
 import "react-datetime/css/react-datetime.css";
 import moment from 'moment';
 
-
-const proxy = new HasuraProxy("https://square-swan-44.hasura.app/v1/graphql");
+const proxy = HasuraProxy.getInstance();
 
 export default function EventSetting() {
 	const router = useRouter();

@@ -17,10 +17,6 @@ export default withAuthenticationRequired(function Tables() {
   const router = useRouter()
   const [query, setQuery] = useState(null);
 
-	if (query) {
-		console.log(Object.keys(query).length);
-	}
-
 	useEffect(() => {
 		setQuery(router.query);
 	}, [router]);

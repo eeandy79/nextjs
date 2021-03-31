@@ -23,7 +23,6 @@ function OneRow(event, color, index) {
 	const { title, start_datetime, end_datetime, desc } = event;
 	var _title = title;
 	var date = new moment(start_datetime);
-	console.log(date.format('dddd DD-MMM-YYYY hh:mm:ss'));
 
 	return (
       <tr key={event.id}>
@@ -79,8 +78,7 @@ function TableHeaderItem(title, color) {
   )
 }
 
-
-const proxy = new HasuraProxy("https://square-swan-44.hasura.app/v1/graphql");
+const proxy = HasuraProxy.getInstance();
 
 function EventList({ color }) {
   const router = useRouter();
@@ -97,7 +95,6 @@ function EventList({ color }) {
           scope: "read:current_user",
         });
         setAccessToken(token);
-        console.log(token);
 
       } catch (e) {
         console.log("error: " + e.message);
@@ -110,7 +107,6 @@ function EventList({ color }) {
     if (accessToken) {
       try {
         proxy.getEvents(accessToken).then((result) => {
-          console.log(sample["events"]);
           console.log(result["data"]["events"]);
           setEvents(result["data"]["events"]);
         });

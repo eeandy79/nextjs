@@ -5,9 +5,9 @@ const UPDATE_EVENT = gql`
 	mutation update_events($_set: events_set_input, $where: events_bool_exp!) {
 		update_events(_set: $_set, where: $where) {
 			returning {
+				id
 				desc
 				end_datetime
-				id
 				start_datetime
 				title
 			}
@@ -28,12 +28,20 @@ query query_events($where: events_bool_exp) {
 `;
 
 export default class HasuraProxy {
+  static _instance = null;
 	constructor(uri) {
 		this._client= new ApolloClient({
 			uri: uri,
 			cache: new InMemoryCache()
 		});
 	}
+
+  static getInstance() {
+    if (HasuraProxy._intance == null) {
+      HasuraProxy._instance = new HasuraProxy("https://square-swan-44.hasura.app/v1/graphql");
+    }
+    return this._instance;
+  }
 
 	getEvents(accessToken) {
 		return this._client.query({
