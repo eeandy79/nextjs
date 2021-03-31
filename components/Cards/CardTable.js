@@ -1,7 +1,9 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
+import { useAuth0 } from "@auth0/auth0-react";
 import PropTypes from "prop-types";
 import Link from 'next/link';
 import { useRouter } from 'next/router'
+import HasuraProxy from "utils/hasura_proxy.js"
 
 // components
 
@@ -20,7 +22,6 @@ function RenderTableData(events, color) {
 function OneRow(event, color, index) {
 	const { title, start_datetime, end_datetime, desc } = event;
 	var _title = title;
-	//(title.length > MAX_TITLE_LENGTH)?title.substring(0,MAX_TITLE_LENGTH).concat("..."):title;
 	var date = new moment(start_datetime);
 	console.log(date.format('dddd DD-MMM-YYYY hh:mm:ss'));
 
@@ -64,65 +65,103 @@ function OneRow(event, color, index) {
 }
 
 function TableHeaderItem(title, color) {
-	return (
-      <th
-      	className={
-          "px-6 align-middle border border-solid py-3 text-xs uppercase border-l-0 border-r-0 whitespace-no-wrap font-semibold text-left " +
-          (color === "light"
-            ? "bg-gray-100 text-gray-600 border-gray-200"
-            : "bg-gray-700 text-gray-300 border-gray-600")
-        }
-      >
-	  {title}
-	  </th>
-	)
+  return (
+    <th
+      className={
+        "px-6 align-middle border border-solid py-3 text-xs uppercase border-l-0 border-r-0 whitespace-no-wrap font-semibold text-left " +
+        (color === "light"
+          ? "bg-gray-100 text-gray-600 border-gray-200"
+          : "bg-gray-700 text-gray-300 border-gray-600")
+      }
+    >
+    {title}
+    </th>
+  )
 }
+
+
+const proxy = new HasuraProxy("https://square-swan-44.hasura.app/v1/graphql");
 
 function EventList({ color }) {
   const router = useRouter();
+  const { isAuthenticated, getAccessTokenSilently } = useAuth0();
+  const [accessToken, setAccessToken] = useState(null);
+  const [events, setEvents] = useState([]);
+
+  useEffect(() => {
+    const getToken = async () => {
+      const domain = process.env.NEXT_PUBLIC_DOMAIN;
+      try {
+        const token = await getAccessTokenSilently({
+          audience: `https://${domain}/api/v2/`,
+          scope: "read:current_user",
+        });
+        setAccessToken(token);
+        console.log(token);
+
+      } catch (e) {
+        console.log("error: " + e.message);
+      }
+    };
+    getToken();
+  }, []);
+
+  useEffect(() => {
+    if (accessToken) {
+      try {
+        proxy.getEvents(accessToken).then((result) => {
+          console.log(sample["events"]);
+          console.log(result["data"]["events"]);
+          setEvents(result["data"]["events"]);
+        });
+      } catch (e) {
+        console.log("error: " + e.message);
+      }
+    }
+  }, [proxy, accessToken]);
 
   return (
-      <div
-        className={
-          "relative flex flex-col min-w-0 break-words w-full mb-6 shadow-lg rounded " +
-          (color === "light" ? "bg-white" : "bg-gray-800 text-white")
-        }
-      >
-        <div className="rounded-t mb-0 px-4 py-3 border-0">
-          <div className="text-center flex justify-between">
-              <h3 className="font-bold text-xl text-gray-800">Events</h3>
-              <button
-                className="bg-gray-800 active:bg-gray-700 text-white font-bold uppercase text-xs px-4 py-2 rounded shadow hover:shadow-md outline-none focus:outline-none mr-1 ease-linear transition-all duration-150"
-                type="button"
-								onClick={() => {
-									router.push({
-										pathname: '/admin/tables',
-										query: { create: true },
-									})
-								}}
-              >
-              <i className="fas fa-plus-circle"></i> Create
-              </button>
-          </div>
-        </div>
-        <div className="block w-full overflow-x-auto">
-          {/* Projects table */}
-          <table className="items-center w-full bg-transparent border-collapse">
-            <thead>
-              <tr>
-	            {TableHeaderItem("Title", color)}
-	            {TableHeaderItem("Start Date", color)}
-	            {TableHeaderItem("Status", color)}
-	            {TableHeaderItem("Completion", color)}
-	            {TableHeaderItem("", color)}
-              </tr>
-            </thead>
-            <tbody>
-	  			{RenderTableData(sample["events"], color)}
-            </tbody>
-          </table>
+    <div
+    className={
+      "relative flex flex-col min-w-0 break-words w-full mb-6 shadow-lg rounded " +
+      (color === "light" ? "bg-white" : "bg-gray-800 text-white")
+    }
+    >
+      <div className="rounded-t mb-0 px-4 py-3 border-0">
+        <div className="text-center flex justify-between">
+          <h3 className="font-bold text-xl text-gray-800">Events</h3>
+          <button
+            className="bg-gray-800 active:bg-gray-700 text-white font-bold uppercase text-xs px-4 py-2 rounded shadow hover:shadow-md outline-none focus:outline-none mr-1 ease-linear transition-all duration-150"
+            type="button"
+            onClick={() => {
+              router.push({
+                pathname: '/admin/tables',
+                query: { create: true },
+              })
+            }}
+          >
+          <i className="fas fa-plus-circle"></i> Create
+          </button>
         </div>
       </div>
+      <div className="block w-full overflow-x-auto">
+        {/* Projects table */}
+        <table className="items-center w-full bg-transparent border-collapse">
+          <thead>
+            <tr>
+              {TableHeaderItem("Title", color)}
+              {TableHeaderItem("Start Date", color)}
+              {TableHeaderItem("Status", color)}
+              {TableHeaderItem("Completion", color)}
+              {TableHeaderItem("", color)}
+            </tr>
+          </thead>
+          <tbody>
+            {RenderTableData(events, color)}
+          </tbody>
+        </table>
+      </div>
+    </div>
   );
 }
 

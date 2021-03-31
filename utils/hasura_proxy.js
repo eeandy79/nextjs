@@ -35,6 +35,18 @@ export default class HasuraProxy {
 		});
 	}
 
+	getEvents(accessToken) {
+		return this._client.query({
+			context: {
+				headers: {
+					Authorization: "Bearer " + accessToken
+				}
+			},
+			variables: { where: {}},
+			query: QUERY_EVENTS
+		});
+	}
+
 	getEvent(event_id, accessToken) {
 		return this._client.query({
 			context: {
