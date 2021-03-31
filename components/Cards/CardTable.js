@@ -14,9 +14,16 @@ import moment from "moment";
 const MAX_TITLE_LENGTH = 40;
 
 function RenderTableData(events, color) {
-	return events.map((event, index) => {
-		return OneRow(event, color, index);
-	})
+  var sortAscending = function(a, b) {
+    var a = moment(a["created_at"]);
+    var b = moment(b["created_at"]);
+    return !(a - b);
+  }
+  var _e = [...events];
+  _e.sort(sortAscending);
+  return _e.map((event, index) => {
+      return OneRow(event, color, index);
+      })
 }
 
 function OneRow(event, color, index) {
@@ -107,7 +114,6 @@ function EventList({ color }) {
     if (accessToken) {
       try {
         proxy.getEvents(accessToken).then((result) => {
-          console.log(result["data"]["events"]);
           setEvents(result["data"]["events"]);
         });
       } catch (e) {

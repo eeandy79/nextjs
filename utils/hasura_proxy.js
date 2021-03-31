@@ -17,13 +17,14 @@ const UPDATE_EVENT = gql`
 
 const QUERY_EVENTS = gql`
 query query_events($where: events_bool_exp) {
-		events(where: $where) {
-				desc
-				end_datetime
-				id
-				start_datetime
-				title
-		}
+  events(where: $where) {
+    id
+    title
+    desc
+    created_at
+    start_datetime
+    end_datetime
+  }
 }
 `;
 
