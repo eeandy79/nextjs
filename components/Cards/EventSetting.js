@@ -4,6 +4,10 @@ import console from "console"
 import Editor from "utils/editor.js"
 import HasuraProxy from "utils/hasura_proxy.js"
 import { useRouter } from 'next/router'
+import { LoadingOverlay, Loader } from "react-overlay-loader";
+import 'react-overlay-loader/styles.css';
+import {NotificationContainer, NotificationManager} from 'react-notifications';
+import 'react-notifications/lib/notifications.css';
 
 const proxy = new HasuraProxy("https://square-swan-44.hasura.app/v1/graphql");
 
@@ -14,15 +18,22 @@ export default function EventSetting() {
 	const [editor, setEditor] = useState(null);
 	const [eventDetails, setEventDetails] = useState(null);
 	const [selectedDate, setSelectedDate] = React.useState(new Date('2014-08-18T21:11:54'));
+  const [saving, setSaving] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 
 	const handleDateChange = (date) => {
 		setSelectedDate(date);
 	};
 
 	var save = () => {
+    setIsLoading(true);
+    setSaving(true);
 		var _e = Object.assign({}, eventDetails);
 		_e["desc"] = JSON.stringify(editor.getContents());
 		proxy.updateEvent(_e, accessToken).then(result => console.log(result));
+    setIsLoading(false);
+    setSaving(false);
+    NotificationManager.success('Success', 'Save', 750);
 	};
 
 	useEffect(() => {
@@ -51,10 +62,10 @@ export default function EventSetting() {
 				try {
 					proxy.getEvent(event_id, accessToken).then((result) => {
 							var _e = result["data"]["events"][0];
-							//console.log(_e);
 							setEventDetails(_e);
 							editor.setContents(_e["desc"]);
 					});
+          setIsLoading(false);
 				} catch (e) {
 					console.log("error: " + e.message);
 				}
@@ -63,14 +74,17 @@ export default function EventSetting() {
 
   return (
     <>
-      <div className="relative flex flex-col min-w-0 break-words w-full mb-6 shadow-lg rounded-lg bg-gray-200 border-0">
+    <div className="relative flex flex-col min-w-0 break-words w-full mb-6 shadow-lg rounded-lg bg-gray-200 border-0">
+        <NotificationContainer/>
         <div className="rounded-t bg-white mb-0 px-4 py-3">
+          <Loader loading={isLoading} text="processing"/>
           <div className="text-center flex justify-between">
             <h6 className="text-gray-800 text-xl font-bold">Event Configuration</h6>
 						<div>
 						<button
               className="bg-gray-800 active:bg-gray-700 text-white font-bold uppercase text-xs px-4 py-2 rounded shadow hover:shadow-md outline-none focus:outline-none mr-1 ease-linear transition-all duration-150"
               type="button"
+              disabled={saving}
 	          	onClick={save}
             >
 						Save
@@ -108,6 +122,7 @@ export default function EventSetting() {
                     className="px-3 py-3 placeholder-gray-400 text-gray-700 bg-white rounded text-sm shadow focus:outline-none focus:shadow-outline w-full ease-linear transition-all duration-150"
 										value={eventDetails ? eventDetails["title"] : ""}
 										placeholder=""
+                    onChange={()=>{}}
                   />
                 </div>
               </div>
@@ -161,13 +176,6 @@ export default function EventSetting() {
             </div>
             <div className="flex flex-wrap">
               <div className="w-full lg:w-12/12 px-4">
-				<button
-					className="bg-gray-800 active:bg-gray-700 text-white font-bold uppercase text-xs px-4 py-2 rounded shadow hover:shadow-md outline-none focus:outline-none mr-1 ease-linear transition-all duration-150"
-					type="button"
-	  				onClick={save}
-				>
-				Save
-				</button>
 			  </div>
 	        </div>
           </form>
