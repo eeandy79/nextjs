@@ -56,6 +56,7 @@ export default class HasuraProxy {
 			},
 			variables: {
         _set: {
+          title: eventDetails["title"],
           start_datetime: eventDetails["start_datetime"],
           end_datetime: eventDetails["end_datetime"],
           desc: eventDetails["desc"]

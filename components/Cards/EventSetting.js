@@ -25,23 +25,17 @@ export default function EventSetting() {
   const [isLoading, setIsLoading] = useState(true);
   const [startTime, setStartTime] = useState(null);
   const [endTime, setEndTime] = useState(null);
+  const [title, setTitle] = useState("");
 
-	const handleDateChange = (date) => {
-		setSelectedDate(date);
-	};
-
-  var updateStartTime = (d) => {
-    setStartTime(d);
-  }
-
-  var updateEndTime = (d) => {
-    setEndTime(d);
-  }
+  var updateTitle = (evt) => { setTitle(evt.target.value); }
+  var updateStartTime = (d) => { setStartTime(d); }
+  var updateEndTime = (d) => { setEndTime(d); }
 
 	var save = () => {
     setIsLoading(true);
     setSaving(true);
-		var _e = Object.assign({}, eventDetails);
+    var _e = Object.assign({}, eventDetails);
+    _e["title"] = title;
     _e["start_datetime"] = startTime.toISOString();
     _e["end_datetime"] = endTime.toISOString();
 		_e["desc"] = JSON.stringify(editor.getContents());
@@ -54,7 +48,6 @@ export default function EventSetting() {
 	useEffect(() => {
 		const getToken = async () => {
 			const domain = process.env.NEXT_PUBLIC_DOMAIN;
-
 			try {
 				const token = await getAccessTokenSilently({
 					audience: `https://${domain}/api/v2/`,
@@ -79,6 +72,7 @@ export default function EventSetting() {
 							var _e = result["data"]["events"][0];
 							setEventDetails(_e);
               //console.log(_e);
+              setTitle(_e["title"]);
               setStartTime(moment(_e["start_datetime"]));
               setEndTime(moment(_e["end_datetime"]));
 							editor.setContents(_e["desc"]);
@@ -138,9 +132,9 @@ export default function EventSetting() {
                   <input
                     type="text"
                     className="px-3 py-3 placeholder-gray-400 text-gray-700 bg-white rounded text-sm shadow focus:outline-none focus:shadow-outline w-full ease-linear transition-all duration-150"
-										value={eventDetails ? eventDetails["title"] : ""}
-										placeholder=""
-                    onChange={()=>{}}
+                    value={title}
+                    placeholder=""
+                    onInput={updateTitle}
                   />
                 </div>
               </div>
