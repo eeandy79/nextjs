@@ -37,7 +37,8 @@ export default class HasuraProxy {
 	}
 
   static getInstance() {
-    if (HasuraProxy._intance == null) {
+    if (HasuraProxy._instance == null) {
+      console.log("make hasura proxy");
       HasuraProxy._instance = new HasuraProxy("https://square-swan-44.hasura.app/v1/graphql");
     }
     return this._instance;
