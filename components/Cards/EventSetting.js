@@ -16,7 +16,7 @@ const proxy = HasuraProxy.getInstance();
 
 export default function EventSetting() {
 	const router = useRouter();
-	const { isAuthenticated, getAccessTokenSilently } = useAuth0();
+	const { user, isAuthenticated, getAccessTokenSilently } = useAuth0();
 	const [accessToken, setAccessToken] = useState(null);
 	const [editor, setEditor] = useState(null);
 	const [eventDetails, setEventDetails] = useState(null);
@@ -33,12 +33,21 @@ export default function EventSetting() {
 	var save = () => {
     setIsLoading(true);
     setSaving(true);
-    var _e = Object.assign({}, eventDetails);
-    _e["title"] = title;
-    _e["start_datetime"] = startTime.toISOString();
-    _e["end_datetime"] = endTime.toISOString();
-		_e["desc"] = JSON.stringify(editor.getContents());
-		proxy.updateEvent(_e, accessToken).then(result => console.log(result));
+    if (eventDetails && eventDetails.hasOwnProperty("id")) {
+      var _e = Object.assign({}, eventDetails);
+      _e["title"] = title;
+      _e["start_datetime"] = startTime.toISOString();
+      _e["end_datetime"] = endTime.toISOString();
+      _e["desc"] = JSON.stringify(editor.getContents());
+      proxy.updateEvent(_e, accessToken).then(result => console.log(result));
+    } else {
+      var _e = {};
+      _e["title"] = title;
+      _e["start_datetime"] = startTime?startTime.toISOString():null;
+      _e["end_datetime"] = endTime?endTime.toISOString():null;
+      _e["desc"] = JSON.stringify(editor.getContents());
+      proxy.insertEvent(user["sub"], _e, accessToken).then(result => console.log(result));
+    }
     setIsLoading(false);
     setSaving(false);
     NotificationManager.success('Success', 'Save', 750);
@@ -62,26 +71,28 @@ export default function EventSetting() {
 		getToken();
 	}, []);
 
-	useEffect(() => {
-		var query = router.query;
-		if (query && query.hasOwnProperty("event_id") && accessToken) {
-				const {event_id} = query;
-				try {
-					proxy.getEvent(event_id, accessToken).then((result) => {
-							var _e = result["data"]["events"][0];
-							setEventDetails(_e);
-              //console.log(_e);
-              setTitle(_e["title"]);
-              setStartTime(moment(_e["start_datetime"]));
-              setEndTime(moment(_e["end_datetime"]));
-							editor.setContents(_e["desc"]);
-					});
-          setIsLoading(false);
-				} catch (e) {
-					console.log("error: " + e.message);
-				}
-		}
-	}, [editor, router, proxy, accessToken]);
+  useEffect(() => {
+    var query = router.query;
+    if (query && query.hasOwnProperty("event_id") && accessToken) {
+      const {event_id} = query;
+      try {
+        proxy.getEvent(event_id, accessToken).then((result) => {
+          var _e = result["data"]["events"][0];
+          setEventDetails(_e);
+          console.log(_e);
+          setTitle(_e["title"]);
+          setStartTime(moment(_e["start_datetime"]));
+          setEndTime(moment(_e["end_datetime"]));
+          editor.setContents(_e["desc"]);
+        });
+        setIsLoading(false);
+      } catch (e) {
+        console.log("error: " + e.message);
+      }
+    } else if (query && query.hasOwnProperty("create") && accessToken) {
+      setIsLoading(false);
+    }
+  }, [editor, router, proxy, accessToken]);
 
   return (
     <>
@@ -133,6 +144,7 @@ export default function EventSetting() {
                     className="px-3 py-3 placeholder-gray-400 text-gray-700 bg-white rounded text-sm shadow focus:outline-none focus:shadow-outline w-full ease-linear transition-all duration-150"
                     value={title}
                     placeholder=""
+                    onChange={()=>{}}
                     onInput={updateTitle}
                   />
                 </div>

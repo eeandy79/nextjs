@@ -28,6 +28,14 @@ query query_events($where: events_bool_exp) {
 }
 `;
 
+const INSERT_EVENT_ONE = gql`
+mutation insert_events_one($object: events_insert_input!) {
+  insert_events_one(object: $object) {
+    id
+  }
+}
+`;
+
 export default class HasuraProxy {
   static _instance = null;
 	constructor(uri) {
@@ -68,6 +76,28 @@ export default class HasuraProxy {
 			query: QUERY_EVENTS
 		});
 	}
+
+  insertEvent(user_id, eventDetails, accessToken) {
+    var rv = this._client.mutate({
+      context: {
+        headers: {
+          Authorization: "Bearer " + accessToken
+        }
+      },
+      variables: {
+        object: {
+          title: eventDetails["title"],
+          start_datetime: eventDetails["start_datetime"],
+          end_datetime: eventDetails["end_datetime"],
+          desc: eventDetails["desc"],
+          user_id: user_id
+        }
+      },
+      mutation: INSERT_EVENT_ONE
+    });
+    this._client.resetStore();
+    return rv;
+  }
 
 	updateEvent(eventDetails, accessToken) {
 		return this._client.mutate({
