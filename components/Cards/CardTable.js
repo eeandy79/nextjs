@@ -17,7 +17,9 @@ function RenderTableData(events, color) {
   var sortAscending = function(a, b) {
     var a = moment(a["created_at"]);
     var b = moment(b["created_at"]);
-    return !(a - b);
+    if (a.isBefore(b)) return -1;
+    if (a.isAfter(b)) return 1;
+    return 0;
   }
   var _e = [...events];
   _e.sort(sortAscending);
