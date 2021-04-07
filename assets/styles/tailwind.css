@@ -3680,3 +3680,24 @@ video {
   height: 100%;
 }
 
+.start-date-label {
+  display: inline-block;
+  vertical-align: middle;
+  width: 40px;
+  height: 40px;
+  padding-top: 5px;
+  border-radius: 20px;
+  background-color: #0095e5;
+  color: #fff;
+  text-transform: uppercase;
+  text-align: center;
+}
+
+.start-date-label,
+.day {
+  font-size: 13px;
+  display:block;
+  margin-top: -2px;
+  margin-bottom: -4px;
+  font-weight: 700;
+}

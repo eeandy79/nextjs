@@ -13,6 +13,7 @@ const proxy = HasuraProxy.getInstance();
 export default function EventPage(input) {
   const [iFrame, setIFrame] = useState("");
 	const [editor, setEditor] = useState(null);
+  const [title, setTitle] = useState("");
 
   var event_id = input["event_id"]; // todo: handle eventid not valid
 
@@ -24,7 +25,7 @@ export default function EventPage(input) {
           console.log(_e);
           //setEventDetails(_e);
           //console.log(_e);
-          //setTitle(_e["title"]);
+          setTitle(_e["title"]);
           //setStartTime(moment(_e["start_datetime"]));
           //setEndTime(moment(_e["end_datetime"]));
           setIFrame(_e["video_iframe"]);
@@ -41,25 +42,28 @@ export default function EventPage(input) {
 	  <>
     <Navbar/>
     <main>
-    {/*
-    <div className="relative pt-16 pb-32 flex flex-col content-center items-center justify-center min-h-screen-75">
-    */}
-    <div className="pt-16 pb-32 flex flex-col content-center items-center min-h-screen-75 w-full">
-      {/*
-      <div className="container px-4 mx-auto flex flex-wrap items-center justify-between">
-      */}
+    <div className="relative pt-16 pb-32 flex flex-col content-center items-center min-h-screen-75">
       <div className="container px-4">
-        <div className="flex py-4 w-full">
-          {/*
-          <div className="flex-grow bg-blue pr-4" height="200%">
-          */}
+        <div className="flex py-4">
           <div className="flex w-full">
             <div className="video">
               { ReactHtmlParser(iFrame) }
             </div>
           </div>
-          <div className="flex md:w-4/12 bg-black text-gray-700">
-          abcdefdk
+          <div className="flex md:w-4/12 bg-black">
+            <div className="flex flex-col">
+              <div className="px-3 mt-3">
+                <span className="start-date-label">
+                  <span className="day">Jul</span>
+                  <span className="day">03</span>
+                </span>
+              </div>
+              <div>
+                <h1 className="text-white text-lg px-3 py-3 font-bold">
+                  {title}
+                </h1>
+              </div>
+            </div>
           </div>
         </div>
         <div className="flex">
