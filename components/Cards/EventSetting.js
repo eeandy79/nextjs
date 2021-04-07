@@ -25,10 +25,12 @@ export default function EventSetting() {
   const [startTime, setStartTime] = useState(null);
   const [endTime, setEndTime] = useState(null);
   const [title, setTitle] = useState("");
+  const [iFrame, setIFrame] = useState("");
 
   var updateTitle = (evt) => { setTitle(evt.target.value); }
   var updateStartTime = (d) => { setStartTime(d); }
   var updateEndTime = (d) => { setEndTime(d); }
+  var updateIFrame = (evt) => { setIFrame(evt.target.value); }
 
   var handleDelete = () => {
     setIsLoading(true);
@@ -55,6 +57,7 @@ export default function EventSetting() {
       _e["start_datetime"] = startTime.toISOString();
       _e["end_datetime"] = endTime.toISOString();
       _e["desc"] = JSON.stringify(editor.getContents());
+      _e["video_iframe"] = iFrame;
       proxy.updateEvent(_e, accessToken).then(result => console.log(result));
     } else {
       var _e = {};
@@ -62,6 +65,7 @@ export default function EventSetting() {
       _e["start_datetime"] = startTime?startTime.toISOString():null;
       _e["end_datetime"] = endTime?endTime.toISOString():null;
       _e["desc"] = JSON.stringify(editor.getContents());
+      _e["video_iframe"] = iFrame;
       proxy.insertEvent(user["sub"], _e, accessToken).then(result => console.log(result));
     }
     setIsLoading(false);
@@ -99,6 +103,7 @@ export default function EventSetting() {
           setTitle(_e["title"]);
           setStartTime(moment(_e["start_datetime"]));
           setEndTime(moment(_e["end_datetime"]));
+          setIFrame(_e["video_iframe"]);
           editor.setContents(_e["desc"]);
         });
         setIsLoading(false);
@@ -203,6 +208,25 @@ export default function EventSetting() {
                     value={endTime}
                   />
                 </div>
+              </div>
+            </div>
+
+            <hr className="mt-6 border-b-1 border-gray-400" />
+            <h6 className="text-gray-500 text-sm mt-3 mb-6 font-bold uppercase">
+              Video Embedded iFrame
+            </h6>
+            <div className="flex flex-wrap">
+              <div className="w-full lg:w-12/12 px-4">
+                <div className="relative w-full mb-3">
+                   <textarea
+                    type="text"
+                    className="px-3 py-3 placeholder-gray-400 text-gray-700 bg-white rounded text-sm shadow focus:outline-none focus:shadow-outline w-full ease-linear transition-all duration-150"
+                    rows="4"
+                    onChange={updateIFrame}
+                    value={iFrame}
+                    >
+                    </textarea>
+	              </div>
               </div>
             </div>
 

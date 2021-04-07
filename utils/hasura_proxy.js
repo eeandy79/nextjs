@@ -2,17 +2,18 @@ import { ApolloClient, InMemoryCache } from '@apollo/client';
 import { gql, useMutation } from '@apollo/client';
 
 const UPDATE_EVENT = gql`
-	mutation update_events($_set: events_set_input, $where: events_bool_exp!) {
-		update_events(_set: $_set, where: $where) {
-			returning {
-				id
-				desc
-				end_datetime
-				start_datetime
-				title
-			}
-		}
-	}
+mutation update_events($_set: events_set_input, $where: events_bool_exp!) {
+  update_events(_set: $_set, where: $where) {
+    returning {
+      id
+      desc
+      end_datetime
+      start_datetime
+      title
+      video_iframe
+    }
+  }
+}
 `;
 
 const QUERY_EVENTS = gql`
@@ -24,6 +25,7 @@ query query_events($where: events_bool_exp) {
     created_at
     start_datetime
     end_datetime
+    video_iframe
   }
 }
 `;
@@ -114,6 +116,7 @@ export default class HasuraProxy {
           start_datetime: eventDetails["start_datetime"],
           end_datetime: eventDetails["end_datetime"],
           desc: eventDetails["desc"],
+          video_iframe: eventDetails["video_iframe"],
           user_id: user_id
         }
       },
@@ -135,7 +138,8 @@ export default class HasuraProxy {
           title: eventDetails["title"],
           start_datetime: eventDetails["start_datetime"],
           end_datetime: eventDetails["end_datetime"],
-          desc: eventDetails["desc"]
+          desc: eventDetails["desc"],
+          video_iframe: eventDetails["video_iframe"]
         },
         where: {
           id: {_eq: eventDetails["id"]}
