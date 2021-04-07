@@ -30,6 +30,19 @@ query query_events($where: events_bool_exp) {
 }
 `;
 
+const QUERY_ONE_EVENT_ANONYMOUS = gql`
+query ($id: uuid!) {
+  events_by_pk(id: $id) {
+    id
+    title
+    desc
+    start_datetime
+    end_datetime
+    video_iframe
+  }
+}
+`;
+
 const INSERT_EVENT_ONE = gql`
 mutation insert_events_one($object: events_insert_input!) {
   insert_events_one(object: $object) {
@@ -76,15 +89,23 @@ export default class HasuraProxy {
 	}
 
 	getEvent(event_id, accessToken) {
-		return this._client.query({
-			context: {
-				headers: {
-					Authorization: "Bearer " + accessToken
-				}
-			},
-			variables: { where: {id: {_eq: event_id}}},
-			query: QUERY_EVENTS
-		});
+    if (accessToken) {
+      return this._client.query({
+        context: {
+          headers: {
+            Authorization: "Bearer " + accessToken
+          }
+        },
+        variables: { where: {id: {_eq: event_id}}},
+        query: QUERY_EVENTS
+      });
+    } else {
+      return this._client.query({
+        variables: { id: event_id},
+        query: QUERY_ONE_EVENT_ANONYMOUS
+      });
+
+    }
 	}
 
   deleteEvent(event_id, accessToken) {
