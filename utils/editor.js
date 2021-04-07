@@ -10,6 +10,8 @@ export default class Editor extends React.Component {
 		super(props)
 		this.quillRef = null;      // Quill instance
 		this.reactQuillRef = null; // ReactQuill component
+    this.readonly = props["readonly"]?props["readonly"]=="true":false;
+    this.toolbar = props["toolbar"]?props["toolbar"]=="true":true;
 	}
 
 	componentDidMount() {
@@ -62,8 +64,9 @@ export default class Editor extends React.Component {
 			<div>
 			<ReactQuill
 				ref={(el) => { this.reactQuillRef = el }}
-				modules={{"toolbar": true}}
+				modules={{"toolbar": this.toolbar}}
 				theme={'snow'}
+        readOnly={this.readonly}
 			/>
 			</div>
 		)
