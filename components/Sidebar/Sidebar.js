@@ -83,9 +83,11 @@ export default function Sidebar() {
             {/* Divider */}
             <hr className="my-4 md:min-w-full" />
             {/* Heading */}
+            {/*
             <h6 className="md:min-w-full text-gray-600 text-xs uppercase font-bold block pt-1 pb-4 no-underline">
               Admin Layout Pages
             </h6>
+            */}
             {/* Navigation */}
 
             <ul className="md:flex-col md:min-w-full flex flex-col list-none">
@@ -161,6 +163,7 @@ export default function Sidebar() {
                 </Link>
               </li>
 
+              {/*
               <li className="items-center">
                 <Link href="/admin/maps">
                   <a
@@ -184,16 +187,20 @@ export default function Sidebar() {
                   </a>
                 </Link>
               </li>
+              */}
             </ul>
 
             {/* Divider */}
             <hr className="my-4 md:min-w-full" />
             {/* Heading */}
+            {/*
             <h6 className="md:min-w-full text-gray-600 text-xs uppercase font-bold block pt-1 pb-4 no-underline">
               Auth Layout Pages
             </h6>
+            */}
             {/* Navigation */}
 
+            {/*
             <ul className="md:flex-col md:min-w-full flex flex-col list-none md:mb-4">
               <li className="items-center">
                 <Link href="/auth/login">
@@ -219,7 +226,7 @@ export default function Sidebar() {
                 </Link>
               </li>
             </ul>
-          
+            */}
           </div>
         </div>
       </nav>

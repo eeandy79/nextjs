@@ -57,8 +57,9 @@ const UserDropdown = () => {
           }
           onClick={(e) => e.preventDefault()}
         >
-          Action
+          Action (TBD)
         </a>
+        {/*
         <a
           href="#pablo"
           className={
@@ -77,6 +78,7 @@ const UserDropdown = () => {
         >
           Something else here
         </a>
+        */}
         <div className="h-0 my-2 border border-solid border-gray-200" />
         <a
           href="#pablo"
