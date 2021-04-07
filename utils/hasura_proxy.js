@@ -36,6 +36,14 @@ mutation insert_events_one($object: events_insert_input!) {
 }
 `;
 
+const DELETE_EVENT_ONE = gql`
+mutation delete_events_by_pk($id: uuid!) {
+  delete_events_by_pk(id: $id) {
+    id
+  }
+}
+`;
+
 export default class HasuraProxy {
   static _instance = null;
 	constructor(uri) {
@@ -48,7 +56,7 @@ export default class HasuraProxy {
   static getInstance() {
     if (HasuraProxy._instance == null) {
       console.log("make hasura proxy");
-      HasuraProxy._instance = new HasuraProxy("https://square-swan-44.hasura.app/v1/graphql");
+      HasuraProxy._instance = new HasuraProxy("https://major-mole-59.hasura.app/v1/graphql");
     }
     return this._instance;
   }
@@ -76,6 +84,22 @@ export default class HasuraProxy {
 			query: QUERY_EVENTS
 		});
 	}
+
+  deleteEvent(event_id, accessToken) {
+    var rv = this._client.mutate({
+      context: {
+        headers: {
+          Authorization: "Bearer " + accessToken
+        }
+      },
+      variables: {
+        id: event_id
+      },
+      mutation: DELETE_EVENT_ONE
+    });
+    this._client.resetStore();
+    return rv;
+  }
 
   insertEvent(user_id, eventDetails, accessToken) {
     var rv = this._client.mutate({

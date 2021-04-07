@@ -30,6 +30,22 @@ export default function EventSetting() {
   var updateStartTime = (d) => { setStartTime(d); }
   var updateEndTime = (d) => { setEndTime(d); }
 
+  var handleDelete = () => {
+    setIsLoading(true);
+    setSaving(true);
+    if (eventDetails && eventDetails.hasOwnProperty("id")) {
+      proxy.deleteEvent(eventDetails["id"], accessToken).then(result => console.log(result));
+      setIsLoading(false);
+      setSaving(false);
+      router.push({
+        pathname: '/admin/tables',
+      })
+    } else {
+      setIsLoading(false);
+      setSaving(false);
+    }
+  };
+
 	var save = () => {
     setIsLoading(true);
     setSaving(true);
@@ -111,6 +127,15 @@ export default function EventSetting() {
             >
 						Save
             </button>
+						<button
+              className="bg-gray-800 active:bg-gray-700 text-white font-bold uppercase text-xs px-4 py-2 rounded shadow hover:shadow-md outline-none focus:outline-none mr-1 ease-linear transition-all duration-150"
+              type="button"
+              disabled={saving}
+              onClick={handleDelete}
+            >
+            Delete
+            </button>
+
 						<button
               className="bg-gray-800 active:bg-gray-700 text-white font-bold uppercase text-xs px-4 py-2 rounded shadow hover:shadow-md outline-none focus:outline-none mr-1 ease-linear transition-all duration-150"
               type="button"
