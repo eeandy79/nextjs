@@ -29,6 +29,7 @@
     "react-overlay-loader": "0.0.3",
     "react-notifications": "1.7.2",
     "react-datetime": "3.0.3",
+    "react-html-parser": "2.0.2",
     "tailwindcss": "1.8.10"
   }
 }
