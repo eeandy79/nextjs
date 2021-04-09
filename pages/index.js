@@ -4,7 +4,6 @@ import styles from '../styles/Home.module.css'
 import IndexNavbar from "../components/Navbars/IndexNavbar.js";
 import Landing from "./landing.js"
 import Dashboard from "./admin/dashboard.js";
-import EventPage from "./eventpage.js"
 import { useAuth0 } from "@auth0/auth0-react";
 import {
   Collapse,
@@ -122,17 +121,6 @@ export default function Home() {
     isLoading,
     isAuthenticated,
   } = useAuth0();
-
-  const router = useRouter();
-  var query = router.query;
-  if (query && query.hasOwnProperty("event_id")) {
-    return (
-      <>
-      <EventPage event_id={query["event_id"]}/>
-      </>
-    )
-  }
-
 
   if (!isLoading) {
     if (isAuthenticated) {

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import Link from "next/link";
+import { useRouter } from "next/router";
 import HasuraProxy from "utils/hasura_proxy.js"
 
 // components
@@ -11,23 +11,27 @@ import moment from "moment";
 
 const proxy = HasuraProxy.getInstance();
 
-export default function EventPage(input) {
+export default function EventPage() {
   const [iFrame, setIFrame] = useState("");
 	const [editor, setEditor] = useState(null);
   const [title, setTitle] = useState("");
   const [startTime, setStartTime] = useState(null);
   const [endTime, setEndTime] = useState(null);
+  const [eventID, setEventID] = useState(null);
+  const router = useRouter();
 
-  var event_id = input["event_id"]; // todo: handle eventid not valid
+  useEffect(() => {
+    const { event_id } = router.query; // todo: handle eventid not valid
+    console.log(event_id);
+    setEventID(event_id);
+  },[router]);
 
   useEffect(() => {
     if (editor) {
       try {
-        proxy.getEvent(event_id, null).then((result) => {
+        proxy.getEvent(eventID, null).then((result) => {
           var _e = result["data"]["events_by_pk"];
           console.log(_e);
-          //setEventDetails(_e);
-          //console.log(_e);
           setTitle(_e["title"]);
           setStartTime(moment(_e["start_datetime"]));
           setEndTime(moment(_e["end_datetime"]));
@@ -39,7 +43,7 @@ export default function EventPage(input) {
         console.log("error: " + e.message);
       }
     }
-  }, [editor]);
+  }, [editor, eventID]);
 
   return (
 	  <>
@@ -94,14 +98,17 @@ export default function EventPage(input) {
           </div>
         </div>
         <div className="flex">
-          <Editor
-            ref={(el) => {setEditor(el)}}
-            className="px-3 py-3 placeholder-gray-400 text-gray-700 bg-white rounded text-sm shadow focus:outline-none focus:shadow-outline w-full ease-linear transition-all duration-150"
-            readonly="true"
-            toolbar="false"
-            theme="bubble"
-            >
-          </Editor>
+          {
+            eventID ? (
+            <Editor
+              ref={(el) => {setEditor(el)}}
+              className="px-3 py-3 placeholder-gray-400 text-gray-700 bg-white rounded text-sm shadow focus:outline-none focus:shadow-outline w-full ease-linear transition-all duration-150"
+              readonly="true"
+              toolbar="false"
+              theme="bubble"
+              />
+            ):("")
+          }
         </div>
       </div>
     </div>

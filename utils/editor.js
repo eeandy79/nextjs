@@ -63,14 +63,12 @@ export default class Editor extends React.Component {
 
 	render() {
 		return (
-			<div>
 			<ReactQuill
 				ref={(el) => { this.reactQuillRef = el }}
 				modules={{"toolbar": this.toolbar}}
 				theme={this.theme}
         readOnly={this.readonly}
 			/>
-			</div>
 		)
 	}
 }
