@@ -16,7 +16,7 @@ export default function Navbar(props) {
 
   const logoutWithRedirect = () =>
     logout({
-      returnTo: window.location.origin,
+      returnTo: process.env.NEXT_PUBLIC_CALLBACK + "?event_id=" + props["event_id"]
     });
 
   var redirect_uri = "/";
