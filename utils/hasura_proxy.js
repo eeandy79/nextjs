@@ -70,7 +70,6 @@ export default class HasuraProxy {
 
   static getInstance() {
     if (HasuraProxy._instance == null) {
-      console.log("make hasura proxy");
       HasuraProxy._instance = new HasuraProxy("https://major-mole-59.hasura.app/v1/graphql");
     }
     return this._instance;

@@ -22,7 +22,6 @@ export default function EventPage() {
 
   useEffect(() => {
     const { event_id } = router.query; // todo: handle eventid not valid
-    console.log(event_id);
     setEventID(event_id);
   },[router]);
 
@@ -31,7 +30,7 @@ export default function EventPage() {
       try {
         proxy.getEvent(eventID, null).then((result) => {
           var _e = result["data"]["events_by_pk"];
-          console.log(_e);
+          //console.log(_e);
           setTitle(_e["title"]);
           setStartTime(moment(_e["start_datetime"]));
           setEndTime(moment(_e["end_datetime"]));
