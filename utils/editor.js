@@ -2,6 +2,7 @@ import console from 'console'
 import sample from './sample.json'
 import Delta from 'quill-delta'
 import 'react-quill/dist/quill.snow.css';
+import 'react-quill/dist/quill.bubble.css';
 
 const ReactQuill = typeof window === 'object' ? require('react-quill') : () => false;
 
@@ -12,6 +13,7 @@ export default class Editor extends React.Component {
 		this.reactQuillRef = null; // ReactQuill component
     this.readonly = props["readonly"]?props["readonly"]=="true":false;
     this.toolbar = props["toolbar"]?props["toolbar"]=="true":true;
+    this.theme = props["theme"]?props["theme"]:"snow";
 	}
 
 	componentDidMount() {
@@ -65,7 +67,7 @@ export default class Editor extends React.Component {
 			<ReactQuill
 				ref={(el) => { this.reactQuillRef = el }}
 				modules={{"toolbar": this.toolbar}}
-				theme={'snow'}
+				theme={this.theme}
         readOnly={this.readonly}
 			/>
 			</div>
