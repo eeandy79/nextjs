@@ -46,7 +46,7 @@ export default function EventPage() {
 
   return (
 	  <>
-    <Navbar/>
+    <Navbar event_id={eventID}/>
     <main>
     <div className="relative pt-16 pb-32 flex flex-col content-center items-center min-h-screen-75">
       <div className="container px-4">

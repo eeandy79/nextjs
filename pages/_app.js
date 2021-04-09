@@ -6,10 +6,9 @@ import "@fortawesome/fontawesome-free/css/all.min.css";
 import "assets/styles/tailwind.css";
 import console from 'console'
 
-
 const onRedirectCallback = (appState) => {
-	Router.replace(appState?.returnTo || '/');
-	//Router.replace('/admin/dashboard');
+  console.log(appState);
+  Router.push(appState?.returnTo || '/');
 };
 
 function MyApp({ Component, pageProps }) {

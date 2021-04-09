@@ -19,6 +19,11 @@ export default function Navbar(props) {
       returnTo: window.location.origin,
     });
 
+  var redirect_uri = "/";
+  if (props && props.hasOwnProperty("event_id")) {
+    redirect_uri = "event/" + props["event_id"];
+  }
+
   return (
     <>
       <nav className="top-0 fixed z-50 w-full flex flex-wrap items-center justify-between px-2 py-3 navbar-expand-lg bg-white shadow">
@@ -100,7 +105,14 @@ export default function Navbar(props) {
                   <button
                     className="bg-gray-800 text-white active:bg-gray-700 text-xs font-bold uppercase px-4 py-2 rounded shadow hover:shadow-lg outline-none focus:outline-none lg:mr-1 lg:mb-0 ml-3 mb-3 ease-linear transition-all duration-150"
                     type="button"
-                    onClick={() => loginWithRedirect()}
+                    onClick= {() => loginWithRedirect(
+                      {
+                        appState: {
+                          returnTo: redirect_uri
+                        },
+                        ui_locales: 'zh-TW'
+                      })
+                    }
                   >
                     <i className="fas fa-arrow-alt-circle-down"></i> LOGIN
                   </button>
