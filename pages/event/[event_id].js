@@ -119,7 +119,7 @@ export default function EventPage() {
           </ul>
         </div>
       }
-    <form className="rounded-lg shadow-lg bg-opacity-80 bg-gray-500 px-4 py-4" style={{width:500, marginLeft:100, marginTop:100}} onSubmit={handleSubmit} onChange={handleChange}>
+    <form className="sm:rounded-lg sm:shadow-lg sm:w-1/2 bg-opacity-80 bg-gray-500 px-4 py-4 mx-4 my-4" onSubmit={handleSubmit} onChange={handleChange}>
         <div>
           <h4 className="text-2xl font-semibold">
             {title}
