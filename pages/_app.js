@@ -1,8 +1,8 @@
-import "../styles/globals.css"
 import Router from 'next/router';
 import { Auth0Provider } from '@auth0/auth0-react';
 
-//import "tailwindcss/tailwind.css";
+import "../assets/tailwind.css"
+import "../styles/globals.css"
 import "@fortawesome/fontawesome-free/css/all.min.css";
 import console from 'console'
 
