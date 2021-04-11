@@ -89,6 +89,7 @@ export default function EventPage() {
     }
   }, [editor, isEventLoaded]);
 
+
   if (!isEventLoaded || submitting) {
     return (
       <>
@@ -100,7 +101,13 @@ export default function EventPage() {
   if (!isLogin) {
   return (
     <>
-    <main className="absolute bg-blue-400 w-full h-full">
+    <main 
+      className="absolute bg-blue-400 w-full h-full bg-no-repeat bg-center bg-cover"
+      style={{
+        backgroundImage:
+        "url('https://images.unsplash.com/photo-1557804506-669a67965ba0?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1267&q=80')",
+        }}
+    >
       {
         submitting &&
         <div>
@@ -112,43 +119,43 @@ export default function EventPage() {
           </ul>
         </div>
       }
-    <form className="rounded-lg shadow-lg bg-opacity-50 bg-gray-300 px-4 py-4" style={{width:500, marginLeft:100, marginTop:100}} onSubmit={handleSubmit} onChange={handleChange}>
+    <form className="rounded-lg shadow-lg bg-opacity-80 bg-gray-500 px-4 py-4" style={{width:500, marginLeft:100, marginTop:100}} onSubmit={handleSubmit} onChange={handleChange}>
         <div>
           <h4 className="text-2xl font-semibold">
             {title}
           </h4>
         </div>
         <div style={{marginTop:2}}>
-          <p className="leading-relaxed text-sm text-gray-700" style={{marginTop:2}}>
+          <p className="leading-relaxed text-sm text-gray-300" style={{marginTop:2}}>
             Please enter your passcode(*just click submit now*):
           </p>
           <input
             name="passcode"
             type="text"
-            className="px-3 py-3 placeholder-gray-100 text-gray-700 bg-white rounded text-sm shadow focus:outline-none focus:shadow-outline w-full ease-linear transition-all duration-150"
+            className="px-3 py-3 placeholder-gray-300 text-gray-700 bg-white rounded text-sm shadow focus:outline-none focus:shadow-outline w-full ease-linear transition-all duration-150"
             placeholder="Your Passcode"
             value={formData.passcode || ''}
           />
         </div>
         <div style={{marginTop:2}}>
-          <p className="leading-relaxed text-sm text-gray-700" style={{marginTop:2}}>
+          <p className="leading-relaxed text-sm text-gray-300" style={{marginTop:2}}>
             Please enter your name:
           </p>
           <input
             name="name"
             type="text"
-            className="px-3 py-3 placeholder-gray-100 text-gray-700 bg-white rounded text-sm shadow focus:outline-none focus:shadow-outline w-full ease-linear transition-all duration-150"
+            className="px-3 py-3 placeholder-gray-300 text-gray-700 bg-white rounded text-sm shadow focus:outline-none focus:shadow-outline w-full ease-linear transition-all duration-150"
             placeholder="Your Name"
             value={formData.name || ''}
           />
         </div>
         <div style={{marginTop:2}}>
-          <input className="form-checkbox" type="checkbox" name="terms" onChange={handleChange} checked={formData["terms"] || false}/>
-          <span className="px-2 align-middle text-sm text-gray-700">Accept the condition</span>
+          <input className="form-checkbox rounded" type="checkbox" name="terms" onChange={handleChange} checked={formData["terms"] || false}/>
+          <span className="px-2 align-middle text-sm text-gray-300">Accept the condition</span>
         </div>
         <div style={{marginTop:10}}>
           <button
-            className="bg-gray-900 text-white active:bg-gray-700 text-sm font-bold uppercase px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
+            className="bg-gray-800 text-white active:bg-gray-700 text-sm font-bold uppercase px-6 py-3 rounded shadow hover:bg-red-700 hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
             type="submit"
             >
             Submit
