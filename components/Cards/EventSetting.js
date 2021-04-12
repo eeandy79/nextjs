@@ -171,7 +171,7 @@ export default function EventSetting() {
                   </label>
                   <input
                     type="text"
-                    className="px-3 py-3 placeholder-gray-400 text-gray-700 bg-white rounded text-sm shadow focus:outline-none focus:shadow-outline w-full ease-linear transition-all duration-150"
+                    className="px-3 py-3 placeholder-gray-400 text-gray-700 bg-white rounded text-sm shadow focus:outline-none focus:shadow-outline w-full ease-linear transition-all duration-150 border-0"
                     value={title}
                     placeholder=""
                     onChange={()=>{}}
@@ -220,7 +220,7 @@ export default function EventSetting() {
                 <div className="relative w-full mb-3">
                    <textarea
                     type="text"
-                    className="px-3 py-3 placeholder-gray-400 text-gray-700 bg-white rounded text-sm shadow focus:outline-none focus:shadow-outline w-full ease-linear transition-all duration-150"
+                    className="px-3 py-3 placeholder-gray-400 text-gray-700 bg-white rounded text-sm shadow focus:outline-none focus:shadow-outline w-full ease-linear transition-all duration-150 border-0"
                     rows="4"
                     onChange={updateIFrame}
                     value={iFrame}

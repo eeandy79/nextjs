@@ -19,7 +19,7 @@ const UPDATE_USERS = gql`
 `;
 
 const client = new ApolloClient({
-	uri: "https://square-swan-44.hasura.app/v1/graphql",
+  uri: "https://major-mole-59.hasura.app/v1/graphql",
 	cache: new InMemoryCache()
 });
 
@@ -119,7 +119,7 @@ export default function CardSettings() {
                   </label>
                   <input
                     type="text"
-                    className="px-3 py-3 placeholder-gray-400 text-gray-700 bg-white rounded text-sm shadow focus:outline-none focus:shadow-outline w-full ease-linear transition-all duration-150"
+                    className="px-3 py-3 placeholder-gray-400 text-gray-700 bg-white rounded text-sm shadow focus:outline-none focus:shadow-outline w-full ease-linear transition-all duration-150 border-0"
                     defaultValue="lucky.jesse"
                   />
                 </div>
@@ -134,7 +134,7 @@ export default function CardSettings() {
                   </label>
                   <input
                     type="email"
-                    className="px-3 py-3 placeholder-gray-400 text-gray-700 bg-white rounded text-sm shadow focus:outline-none focus:shadow-outline w-full ease-linear transition-all duration-150"
+                    className="px-3 py-3 placeholder-gray-400 text-gray-700 bg-white rounded text-sm shadow focus:outline-none focus:shadow-outline w-full ease-linear transition-all duration-150 border-0"
                     defaultValue={user?user["email"]:""}
                   />
                 </div>
@@ -149,7 +149,7 @@ export default function CardSettings() {
                   </label>
                   <input
                     type="text"
-                    className="px-3 py-3 placeholder-gray-400 text-gray-700 bg-white rounded text-sm shadow focus:outline-none focus:shadow-outline w-full ease-linear transition-all duration-150"
+                    className="px-3 py-3 placeholder-gray-400 text-gray-700 bg-white rounded text-sm shadow focus:outline-none focus:shadow-outline w-full ease-linear transition-all duration-150 border-0"
                     defaultValue="Lucky"
                   />
                 </div>
@@ -164,7 +164,7 @@ export default function CardSettings() {
                   </label>
                   <input
                     type="text"
-                    className="px-3 py-3 placeholder-gray-400 text-gray-700 bg-white rounded text-sm shadow focus:outline-none focus:shadow-outline w-full ease-linear transition-all duration-150"
+                    className="px-3 py-3 placeholder-gray-400 text-gray-700 bg-white rounded text-sm shadow focus:outline-none focus:shadow-outline w-full ease-linear transition-all duration-150 border-0"
                     defaultValue="Jesse"
                   />
                 </div>
@@ -187,7 +187,7 @@ export default function CardSettings() {
                   </label>
                   <input
                     type="text"
-                    className="px-3 py-3 placeholder-gray-400 text-gray-700 bg-white rounded text-sm shadow focus:outline-none focus:shadow-outline w-full ease-linear transition-all duration-150"
+                    className="px-3 py-3 placeholder-gray-400 text-gray-700 bg-white rounded text-sm shadow focus:outline-none focus:shadow-outline w-full ease-linear transition-all duration-150 border-0"
                     defaultValue="Bld Mihail Kogalniceanu, nr. 8 Bl 1, Sc 1, Ap 09"
                   />
                 </div>
@@ -202,7 +202,7 @@ export default function CardSettings() {
                   </label>
                   <input
                     type="email"
-                    className="px-3 py-3 placeholder-gray-400 text-gray-700 bg-white rounded text-sm shadow focus:outline-none focus:shadow-outline w-full ease-linear transition-all duration-150"
+                    className="px-3 py-3 placeholder-gray-400 text-gray-700 bg-white rounded text-sm shadow focus:outline-none focus:shadow-outline w-full ease-linear transition-all duration-150 border-0"
                     defaultValue="New York"
                   />
                 </div>
@@ -217,7 +217,7 @@ export default function CardSettings() {
                   </label>
                   <input
                     type="text"
-                    className="px-3 py-3 placeholder-gray-400 text-gray-700 bg-white rounded text-sm shadow focus:outline-none focus:shadow-outline w-full ease-linear transition-all duration-150"
+                    className="px-3 py-3 placeholder-gray-400 text-gray-700 bg-white rounded text-sm shadow focus:outline-none focus:shadow-outline w-full ease-linear transition-all duration-150 border-0"
                     defaultValue="United States"
                   />
                 </div>
@@ -232,7 +232,7 @@ export default function CardSettings() {
                   </label>
                   <input
                     type="text"
-                    className="px-3 py-3 placeholder-gray-400 text-gray-700 bg-white rounded text-sm shadow focus:outline-none focus:shadow-outline w-full ease-linear transition-all duration-150"
+                    className="px-3 py-3 placeholder-gray-400 text-gray-700 bg-white rounded text-sm shadow focus:outline-none focus:shadow-outline w-full ease-linear transition-all duration-150 border-0"
                     defaultValue="Postal Code"
                   />
                 </div>
@@ -256,7 +256,7 @@ export default function CardSettings() {
                   <textarea
 	                readyonly="true"
                     type="text"
-                    className="px-3 py-3 placeholder-gray-400 text-gray-700 bg-white rounded text-sm shadow focus:outline-none focus:shadow-outline w-full ease-linear transition-all duration-150"
+                    className="px-3 py-3 placeholder-gray-400 text-gray-700 bg-white rounded text-sm shadow focus:outline-none focus:shadow-outline w-full ease-linear transition-all duration-150 border-0"
                     rows="4"
 	  				onChange={()=>{}}
 	  				value={ JSON.stringify(userMetadata, null, 4) }
