@@ -193,7 +193,7 @@ export default function EventPage() {
 
   return (
 	  <>
-    <Navbar event_id={eventID}/>
+    <Navbar event_id={eventID} have_protection={protectContext.hasOwnProperty("enable_protection")?protectContext["enable_protection"]:false}/>
     <main>
     <div className="relative pt-16 pb-32 flex flex-col content-center items-center min-h-screen-75">
       <div className="container px-4">
