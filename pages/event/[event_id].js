@@ -10,6 +10,7 @@ import ReactHtmlParser from "react-html-parser";
 import moment from "moment";
 import { LoadingOverlay, Loader } from "react-overlay-loader";
 import 'react-overlay-loader/styles.css';
+import { useCookies } from "react-cookie";
 
 const proxy = HasuraProxy.getInstance();
 
@@ -40,6 +41,7 @@ export default function EventPage() {
   const [requireLogin, setRequireLogin] = useState(true);
   const [isEventLoaded, setIsEventLoaded] = useState(false);
   const [protectContext, setProtectContext] = useState(null);
+  const [cookies, setCookie, removeCookie] = useCookies(['accessToken']);
   const router = useRouter();
 
   const handleSubmit = event => {
@@ -50,6 +52,15 @@ export default function EventPage() {
         setSubmitting(false);
         setFormData({reset:true});
         setRequireLogin(false);
+
+        let expires = new Date()
+        expires.setTime(expires.getTime() + (60 * 1000))
+        setCookie("accessToken", "bcde", {
+          path: "/",
+          expires: expires,
+          sameSite: true,
+        })
+
         }, 1000)
     // alert('You have submitted the form.')
   }
@@ -78,7 +89,12 @@ export default function EventPage() {
 
           var ctx = _e["protect_context"];
           setProtectContext(ctx);
-          setRequireLogin((ctx && ctx.hasOwnProperty("enable_protection"))?ctx["enable_protection"]:false);
+
+          if (cookies.accessToken) {
+            setRequireLogin(false);
+          } else {
+            setRequireLogin((ctx && ctx.hasOwnProperty("enable_protection"))?ctx["enable_protection"]:false);
+          }
 
           setIsEventLoaded(true);
         });
