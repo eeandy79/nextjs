@@ -11,6 +11,7 @@ mutation update_events($_set: events_set_input, $where: events_bool_exp!) {
       start_datetime
       title
       video_iframe
+      protect_context
     }
   }
 }
@@ -26,6 +27,7 @@ query query_events($where: events_bool_exp) {
     start_datetime
     end_datetime
     video_iframe
+    protect_context
   }
 }
 `;
@@ -39,6 +41,7 @@ query ($id: uuid!) {
     start_datetime
     end_datetime
     video_iframe
+    protect_context
   }
 }
 `;
@@ -137,6 +140,7 @@ export default class HasuraProxy {
           end_datetime: eventDetails["end_datetime"],
           desc: eventDetails["desc"],
           video_iframe: eventDetails["video_iframe"],
+          protect_context: eventDetails["protect_context"],
           user_id: user_id
         }
       },
@@ -159,7 +163,8 @@ export default class HasuraProxy {
           start_datetime: eventDetails["start_datetime"],
           end_datetime: eventDetails["end_datetime"],
           desc: eventDetails["desc"],
-          video_iframe: eventDetails["video_iframe"]
+          video_iframe: eventDetails["video_iframe"],
+          protect_context: eventDetails["protect_context"]
         },
         where: {
           id: {_eq: eventDetails["id"]}

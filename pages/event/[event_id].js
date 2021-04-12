@@ -37,8 +37,9 @@ export default function EventPage() {
   const [eventID, setEventID] = useState(null);
   const [submitting, setSubmitting] = useState(false);
   const [formData, setFormData] = useReducer(formReducer, {});
-  const [isLogin, setIsLogin] = useState(false);
+  const [requireLogin, setRequireLogin] = useState(true);
   const [isEventLoaded, setIsEventLoaded] = useState(false);
+  const [protectContext, setProtectContext] = useState(null);
   const router = useRouter();
 
   const handleSubmit = event => {
@@ -48,7 +49,7 @@ export default function EventPage() {
     setTimeout(() => {
         setSubmitting(false);
         setFormData({reset:true});
-        setIsLogin(true);
+        setRequireLogin(false);
         }, 1000)
     // alert('You have submitted the form.')
   }
@@ -68,12 +69,17 @@ export default function EventPage() {
       try {
         proxy.getEvent(event_id, null).then((result) => {
           var _e = result["data"]["events_by_pk"];
-          //console.log(_e);
+          console.log(_e);
           setTitle(_e["title"]);
           setStartTime(moment(_e["start_datetime"]));
           setEndTime(moment(_e["end_datetime"]));
           setIFrame(_e["video_iframe"]);
           setContent(_e["desc"]);
+
+          var ctx = _e["protect_context"];
+          setProtectContext(ctx);
+          setRequireLogin((ctx && ctx.hasOwnProperty("enable_protection"))?ctx["enable_protection"]:false);
+
           setIsEventLoaded(true);
         });
       } catch (e) {
@@ -98,10 +104,10 @@ export default function EventPage() {
     )
   }
 
-  if (!isLogin) {
+  if (requireLogin) {
   return (
     <>
-    <main 
+    <main
       className="absolute bg-blue-400 w-full h-full bg-no-repeat bg-center bg-cover"
       style={{
         backgroundImage:
@@ -135,6 +141,7 @@ export default function EventPage() {
             className="px-3 py-3 placeholder-gray-300 text-gray-700 bg-white rounded text-sm shadow focus:outline-none focus:shadow-outline w-full ease-linear transition-all duration-150"
             placeholder="Your Passcode"
             value={formData.passcode || ''}
+            onChange={()=>{}}
           />
         </div>
         <div style={{marginTop:2}}>
@@ -147,6 +154,7 @@ export default function EventPage() {
             className="px-3 py-3 placeholder-gray-300 text-gray-700 bg-white rounded text-sm shadow focus:outline-none focus:shadow-outline w-full ease-linear transition-all duration-150"
             placeholder="Your Name"
             value={formData.name || ''}
+            onChange={()=>{}}
           />
         </div>
         <div style={{marginTop:2}}>
