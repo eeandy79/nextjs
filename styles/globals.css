@@ -42,3 +42,7 @@
   padding: 0;
   line-height: inherit;
 }
+
+.content {
+  white-space: pre-line;
+}

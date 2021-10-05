@@ -1,16 +1,18 @@
 import React, { useReducer, useState, useEffect } from "react";
 import { useRouter } from "next/router";
+import HasuraProxy from "utils/hasura_proxy.js"
 
 // components
-import Navbar from "components/Navbars/OneClickNavbar.js";
+import Navbar from "components/Navbars/IndexNavbar.js";
 import Footer from "components/Footers/Footer.js";
+import Editor from "utils/editor.js"
 import ReactHtmlParser from "react-html-parser";
 import moment from "moment";
 import { LoadingOverlay, Loader } from "react-overlay-loader";
 import 'react-overlay-loader/styles.css';
 import { useCookies } from "react-cookie";
 
-const axios = require('axios');
+const proxy = HasuraProxy.getInstance();
 
 const formReducer = (state, event) => {
   if (event.reset) {
@@ -28,7 +30,7 @@ const formReducer = (state, event) => {
 
 export default function EventPage() {
   const [iFrame, setIFrame] = useState("");
-  const [editor, setEditor] = useState(null);
+	const [editor, setEditor] = useState(null);
   const [title, setTitle] = useState("");
   const [startTime, setStartTime] = useState(null);
   const [endTime, setEndTime] = useState(null);
@@ -36,9 +38,7 @@ export default function EventPage() {
   const [eventID, setEventID] = useState(null);
   const [submitting, setSubmitting] = useState(false);
   const [formData, setFormData] = useReducer(formReducer, {});
-  const [hasPasscode, setHasPasscode] = useState(false);
-  const [hasCustomization, setHasCustomization] = useState(false);
-  const [customizationCtx, setCustomizationCtx] = useState(null);
+  const [requireLogin, setRequireLogin] = useState(true);
   const [isEventLoaded, setIsEventLoaded] = useState(false);
   const [protectContext, setProtectContext] = useState(null);
   const [cookies, setCookie, removeCookie] = useCookies(['accessToken']);
@@ -48,32 +48,21 @@ export default function EventPage() {
     event.preventDefault();
     setSubmitting(true);
 
-    var _url = "https://event.hermeslive.com/events/" + eventID + "/validate";
-    axios.post(_url, {
-      passcode: formData["passcode"]
-    }).then(response => {
-      var data = response.data.data
-      console.log(data)
-
-      setTimeout(() => {
+    setTimeout(() => {
         setSubmitting(false);
         setFormData({reset:true});
-        setHasPasscode(false);
+        setRequireLogin(false);
 
         let expires = new Date()
         expires.setTime(expires.getTime() + (60 * 1000))
-        setCookie("accessToken", data.token, {
+        setCookie("accessToken", "bcde", {
           path: "/",
           expires: expires,
           sameSite: true,
         })
 
         }, 1000)
-    }).catch(error => {
-      console.log(error)
-    });
-
-     //alert('You have submitted the form.')
+    // alert('You have submitted the form.')
   }
 
   const handleChange = event => {
@@ -86,54 +75,42 @@ export default function EventPage() {
 
   useEffect(() => {
     const { event_id } = router.query; // todo: handle eventid not valid
-    console.log(event_id)
     if (event_id) {
-      var _url = "https://event.hermeslive.com/events/" + event_id;
       setEventID(event_id);
-      axios.get(_url)
-        .then(response => {
-          var _e = response.data.data.event
-          console.log(_e)
+      try {
+        proxy.getEvent(event_id, null).then((result) => {
+          var _e = result["data"]["events_by_pk"];
+          console.log(_e);
           setTitle(_e["title"]);
-          setStartTime(moment(_e["actualStartDatetime"]));
-          setEndTime(moment(_e["actualEndDatetime"]));
-          setIFrame(_e["embedHtml"]);
-          setContent(_e["description"]);
-          setHasPasscode(_e["hasPasscode"]);
+          setStartTime(moment(_e["start_datetime"]));
+          setEndTime(moment(_e["end_datetime"]));
+          setIFrame(_e["video_iframe"]);
+          setContent(_e["desc"]);
+
+          var ctx = _e["protect_context"];
+          setProtectContext(ctx);
 
           if (cookies.accessToken) {
-            console.log("accessToken: " + cookies.accessToken)
-            setHasPasscode(false);
-            //setRequireLogin(false);
+            setRequireLogin(false);
           } else {
-            //setRequireLogin((ctx && ctx.hasOwnProperty("enable_protection"))?ctx["enable_protection"]:false);
+            setRequireLogin((ctx && ctx.hasOwnProperty("enable_protection"))?ctx["enable_protection"]:false);
           }
 
-          if (_e["withCustomization"]) {
-            setHasCustomization(_e["withCustomization"]);
-          } else {
-            setIsEventLoaded(true);
-          }
-
-        })
-        .catch(error => {
-            console.log(error)
-        });
-    }
-    if (hasCustomization) {
-      var _url = "https://event.hermeslive.com/events/" + event_id + "/customization";
-      axios.get(_url)
-        .then(response => {
-          var _c = response.data.data
-          console.log(_c)
-          setCustomizationCtx(_c)
           setIsEventLoaded(true);
-        })
-        .catch(error => {
-            console.log(error)
         });
+      } catch (e) {
+        console.log("error: " + e.message);
+      }
     }
-  },[router, hasCustomization]);
+
+  },[router]);
+
+  useEffect(() => {
+    if (editor && isEventLoaded) {
+      editor.setContents(content);
+    }
+  }, [editor, isEventLoaded]);
+
 
   if (!isEventLoaded || submitting) {
     return (
@@ -143,14 +120,15 @@ export default function EventPage() {
     )
   }
 
-  if (hasPasscode) {
-    var layout = customizationCtx.customization.passcodePage
-    var config = customizationCtx.customization.passcodePageConfig
+  if (requireLogin) {
   return (
     <>
     <main
       className="absolute bg-blue-400 w-full h-full bg-no-repeat bg-center bg-cover"
-      style={{backgroundImage: layout["--pc-bg-url"], backgroundColor: layout["--pc-bg-color"]}}
+      style={{
+        backgroundImage:
+        "url('https://images.unsplash.com/photo-1557804506-669a67965ba0?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1267&q=80')",
+        }}
     >
       {
         submitting &&
@@ -163,47 +141,59 @@ export default function EventPage() {
           </ul>
         </div>
       }
-    <div className="flex flex-col justify-center">
-    <form className="md:w-3/4 sm:w-full px-4 py-4" onSubmit={handleSubmit} onChange={handleChange}>
-
+    <form className="sm:rounded-lg sm:shadow-lg sm:w-1/2 bg-opacity-80 bg-gray-500 px-4 py-4 mx-4 my-4" onSubmit={handleSubmit} onChange={handleChange}>
         <div>
-          <img style={{height:layout["--pc-logo-height"]}} src={config["logoUrl"]} />
-        </div>
-        <div>
-          <h4 style={{color:layout["--pc-title-color"]}} className="text-3xl font-semibold pb-4">
+          <h4 className="text-2xl font-semibold">
             {title}
           </h4>
         </div>
-        <div style={{color:layout["--pc-label-color"]}} dangerouslySetInnerHTML={{ __html: config["label"]}} />
-        <div className="pt-4">
+        <div style={{marginTop:2}}>
+          <p className="leading-relaxed text-sm text-gray-300" style={{marginTop:2}}>
+            Please enter your passcode(*just click submit now*):
+          </p>
           <input
             name="passcode"
             type="text"
-            style={{maxWidth:"300px", paddingLeft: "10px", padding:"5px", color:layout["--pc-input-color"], textTransform:"uppercase", letterSpacing:"4px"}}
-            className="px-3 py-3 placeholder-gray-300 text-gray-700 bg-white rounded-lg text-4xl shadow focus:outline-none focus:shadow-outline w-full ease-linear transition-all duration-150"
+            className="px-3 py-3 placeholder-gray-300 text-gray-700 bg-white rounded text-sm shadow focus:outline-none focus:shadow-outline w-full ease-linear transition-all duration-150"
+            placeholder="Your Passcode"
             value={formData.passcode || ''}
             onChange={()=>{}}
           />
         </div>
-        <div className="pt-4">
+        <div style={{marginTop:2}}>
+          <p className="leading-relaxed text-sm text-gray-300" style={{marginTop:2}}>
+            Please enter your name:
+          </p>
+          <input
+            name="name"
+            type="text"
+            className="px-3 py-3 placeholder-gray-300 text-gray-700 bg-white rounded text-sm shadow focus:outline-none focus:shadow-outline w-full ease-linear transition-all duration-150"
+            placeholder="Your Name"
+            value={formData.name || ''}
+            onChange={()=>{}}
+          />
+        </div>
+        <div style={{marginTop:2}}>
+          <input className="form-checkbox rounded" type="checkbox" name="terms" onChange={handleChange} checked={formData["terms"] || false}/>
+          <span className="px-2 align-middle text-sm text-gray-300">Accept the condition</span>
+        </div>
+        <div style={{marginTop:10}}>
           <button
-            style={{color:layout["--pc-label-color"],backgroundColor:layout["--pc-button-color"],minWidth:"200px"}}
-            className="bg-gray-800 active:bg-gray-700 text-sm font-bold uppercase px-6 py-3 rounded shadow hover:bg-red-700 hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
+            className="bg-gray-800 text-white active:bg-gray-700 text-sm font-bold uppercase px-6 py-3 rounded shadow hover:bg-red-700 hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
             type="submit"
             >
-            {config["buttonText"]}
+            Submit
           </button>
         </div>
       </form>
-      </div>
     </main>
     </>
   )
   }
 
   return (
-	<>
-    <Navbar event_id={eventID} have_protection={true}/>
+	  <>
+    <Navbar event_id={eventID} have_protection={protectContext.hasOwnProperty("enable_protection")?protectContext["enable_protection"]:false}/>
     <main>
     <div className="relative pt-16 pb-32 flex flex-col content-center items-center min-h-screen-75">
       <div className="container px-4">
@@ -255,8 +245,14 @@ export default function EventPage() {
         </div>
         <div className="flex">
           {
-            isEventLoaded ? (
-              <div className="content" dangerouslySetInnerHTML={{ __html: content }} />
+            eventID ? (
+            <Editor
+              ref={(el) => {setEditor(el)}}
+              className="px-3 py-3 placeholder-gray-400 text-gray-700 bg-white rounded text-sm shadow focus:outline-none focus:shadow-outline w-full ease-linear transition-all duration-150"
+              readonly="true"
+              toolbar="false"
+              theme="bubble"
+              />
             ):("")
           }
         </div>

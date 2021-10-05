@@ -8,8 +8,8 @@ const app = next({ dev })
 const handle = app.getRequestHandler()
 
 const httpsOptions = {
-	  key: fs.readFileSync("./localhost.key"),
-	  cert: fs.readFileSync("./localhost.crt"),
+	  key: fs.readFileSync("./key.pem"),
+	  cert: fs.readFileSync("./cert.pem"),
 };
 
 app.prepare().then(() => {
@@ -24,7 +24,7 @@ app.prepare().then(() => {
 		} else {
 			handle(req, res, parsedUrl)
 		}
-	}).listen(3000, (err) => {
+	}).listen(8000, '0.0.0.0', (err) => {
 		if (err) throw err
 		console.log('> Ready on http://localhost:3000')
 	})
