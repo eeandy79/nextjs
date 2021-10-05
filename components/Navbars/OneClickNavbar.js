@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import Link from "next/link";
-import { useAuth0 } from '@auth0/auth0-react';
 import { useCookies } from "react-cookie";
 import { useRouter } from "next/router"
 // components
@@ -9,19 +8,8 @@ import IndexDropdown from "components/Dropdowns/IndexDropdown.js";
 
 export default function Navbar(props) {
   const [navbarOpen, setNavbarOpen] = React.useState(false);
-  const {
-    user,
-    isAuthenticated,
-    loginWithRedirect,
-    logout,
-  } = useAuth0();
   const [cookies, setCookie, removeCookie] = useCookies(['accessToken']);
   const router = useRouter();
-
-  const logoutWithRedirect = () =>
-    logout({
-      returnTo: process.env.NEXT_PUBLIC_CALLBACK + "?event_id=" + props["event_id"]
-    });
 
   const handleExit = () => {
     if (cookies.accessToken) {
@@ -39,12 +27,6 @@ export default function Navbar(props) {
   }
 
   var have_protection = (props && props.hasOwnProperty("have_protection"))?props["have_protection"]:false;
-  if (have_protection) {
-    console.log("have protection");
-  } else {
-    console.log("don't have protection");
-  }
-
   var logo_url = "https://event-hermeslive.tfisys.com/static_resource/d73374396d6023a96edc0ec887c876e7/img/logo_horizontal_v.svg";
   if (props && props.hasOwnProperty("logo_url")) {
     logo_url = props["logo_url"]
@@ -52,7 +34,7 @@ export default function Navbar(props) {
 
   return (
     <>
-      <nav className="top-0 fixed z-50 w-full flex flex-wrap items-center justify-between px-2 py-3 navbar-expand-lg bg-white shadow">
+      <nav className="top-0 fixed z-50 w-full flex flex-wrap items-center justify-between px-2 navbar-expand-lg bg-white shadow">
         <div className="container px-4 mx-auto flex flex-wrap items-center justify-between">
           <div className="w-full relative flex justify-between lg:w-auto lg:static lg:block lg:justify-start">
             <Link href="/">
@@ -60,7 +42,7 @@ export default function Navbar(props) {
                 className="text-gray-800 text-sm font-bold leading-relaxed inline-block mr-4 py-2 whitespace-no-wrap uppercase"
                 href="#pablo"
               >
-                <img src={logo_url} height="20px" width="80px" />
+                <img src={logo_url} style={{height:"50px"}}/>
               </a>
             </Link>
             <button
@@ -105,45 +87,18 @@ export default function Navbar(props) {
               </li>
 
               { have_protection ? (
-              <li className="flex items-center">
-                  <button
-                    className="bg-gray-800 text-white active:bg-gray-700 text-xs font-bold uppercase px-4 py-2 rounded shadow hover:shadow-lg outline-none focus:outline-none lg:mr-1 lg:mb-0 ml-3 mb-3 ease-linear transition-all duration-150"
-                    type="button"
-                    onClick= {handleExit}
-                  >
-                    <i className="fas fa-sign-out-alt"></i> EXIT
-                  </button>
-              </li>
+                <li className="flex items-center">
+                    <button
+                      className="bg-gray-800 text-white active:bg-gray-700 text-xs font-bold uppercase px-4 py-2 rounded shadow hover:shadow-lg outline-none focus:outline-none lg:mr-1 lg:mb-0 ml-3 mb-3 ease-linear transition-all duration-150"
+                      type="button"
+                      onClick= {handleExit}
+                    >
+                      <i className="fas fa-sign-out-alt"></i> EXIT
+                    </button>
+                </li>
 
               ):(
-                {/*
-              <li className="flex items-center">
-                {!isAuthenticated ? (
-                  <button
-                    className="bg-gray-800 text-white active:bg-gray-700 text-xs font-bold uppercase px-4 py-2 rounded shadow hover:shadow-lg outline-none focus:outline-none lg:mr-1 lg:mb-0 ml-3 mb-3 ease-linear transition-all duration-150"
-                    type="button"
-                    onClick= {() => loginWithRedirect(
-                      {
-                        appState: {
-                          returnTo: redirect_uri
-                        },
-                        ui_locales: 'zh-TW'
-                      })
-                    }
-                  >
-                    <i className="fas fa-arrow-alt-circle-down"></i> LOGIN
-                  </button>
-				          ) : (
-                  <button
-                    className="bg-gray-800 text-white active:bg-gray-700 text-xs font-bold uppercase px-4 py-2 rounded shadow hover:shadow-lg outline-none focus:outline-none lg:mr-1 lg:mb-0 ml-3 mb-3 ease-linear transition-all duration-150"
-                    type="button"
-                    onClick={() => logoutWithRedirect()}
-                  >
-                    <i className="fas fa-arrow-alt-circle-down"></i> LOGOUT
-                  </button>
-				          )}
-              </li>
-              */}
+                <></>
               )}
 
 
