@@ -37,10 +37,10 @@ export default function EventPage() {
   const [submitting, setSubmitting] = useState(false);
   const [formData, setFormData] = useReducer(formReducer, {});
   const [hasPasscode, setHasPasscode] = useState(false);
+  const [hasToken, setHasToken] = useState(false);
   const [hasCustomization, setHasCustomization] = useState(false);
   const [customizationCtx, setCustomizationCtx] = useState(null);
   const [isEventLoaded, setIsEventLoaded] = useState(false);
-  const [protectContext, setProtectContext] = useState(null);
   const [cookies, setCookie, removeCookie] = useCookies(['accessToken']);
   const router = useRouter();
 
@@ -58,7 +58,7 @@ export default function EventPage() {
       setTimeout(() => {
         setSubmitting(false);
         setFormData({reset:true});
-        setHasPasscode(false);
+        setHasToken(true);
 
         let expires = new Date()
         expires.setTime(expires.getTime() + (60 * 1000))
@@ -102,11 +102,10 @@ export default function EventPage() {
           setHasPasscode(_e["hasPasscode"]);
 
           if (cookies.accessToken) {
-            console.log("accessToken: " + cookies.accessToken)
-            setHasPasscode(false);
-            //setRequireLogin(false);
+            //console.log("accessToken: " + cookies.accessToken)
+            setHasToken(true);
           } else {
-            //setRequireLogin((ctx && ctx.hasOwnProperty("enable_protection"))?ctx["enable_protection"]:false);
+            setHasToken(false);
           }
 
           if (_e["withCustomization"]) {
@@ -143,7 +142,7 @@ export default function EventPage() {
     )
   }
 
-  if (hasPasscode) {
+  if (hasPasscode && !hasToken) {
     var layout = customizationCtx.customization.passcodePage
     var config = customizationCtx.customization.passcodePageConfig
   return (
@@ -201,9 +200,10 @@ export default function EventPage() {
   )
   }
 
+  var logo_url= customizationCtx.customization.customLogo.logoUrl;
   return (
 	<>
-    <Navbar event_id={eventID} have_protection={true}/>
+    <Navbar event_id={eventID} have_protection={hasPasscode} logo_url={logo_url}/>
     <main>
     <div className="relative pt-16 pb-32 flex flex-col content-center items-center min-h-screen-75">
       <div className="container px-4">
