@@ -27,12 +27,7 @@ const formReducer = (state, event) => {
 }
 
 export default function EventPage() {
-  const [iFrame, setIFrame] = useState("");
   const [editor, setEditor] = useState(null);
-  const [title, setTitle] = useState("");
-  const [startTime, setStartTime] = useState(null);
-  const [endTime, setEndTime] = useState(null);
-  const [content, setContent] = useState(null);
   const [eventID, setEventID] = useState(null);
   const [submitting, setSubmitting] = useState(false);
   const [formData, setFormData] = useReducer(formReducer, {});
@@ -40,6 +35,7 @@ export default function EventPage() {
   const [hasToken, setHasToken] = useState(false);
   const [hasCustomization, setHasCustomization] = useState(false);
   const [customizationCtx, setCustomizationCtx] = useState(null);
+  const [eventCtx, setEventCtx] = useState(null);
   const [isEventLoaded, setIsEventLoaded] = useState(false);
   const [cookies, setCookie, removeCookie] = useCookies(['accessToken']);
   const router = useRouter();
@@ -67,8 +63,8 @@ export default function EventPage() {
           expires: expires,
           sameSite: true,
         })
+      }, 1000)
 
-        }, 1000)
     }).catch(error => {
       console.log(error)
     });
@@ -87,6 +83,7 @@ export default function EventPage() {
   useEffect(() => {
     const { event_id } = router.query; // todo: handle eventid not valid
     console.log(event_id)
+
     if (event_id) {
       var _url = "https://event.hermeslive.com/events/" + event_id;
       setEventID(event_id);
@@ -94,19 +91,9 @@ export default function EventPage() {
         .then(response => {
           var _e = response.data.data.event
           console.log(_e)
-          setTitle(_e["title"]);
-          setStartTime(moment(_e["actualStartDatetime"]));
-          setEndTime(moment(_e["actualEndDatetime"]));
-          setIFrame(_e["embedHtml"]);
-          setContent(_e["description"]);
+          setEventCtx(_e)
           setHasPasscode(_e["hasPasscode"]);
-
-          if (cookies.accessToken) {
-            //console.log("accessToken: " + cookies.accessToken)
-            setHasToken(true);
-          } else {
-            setHasToken(false);
-          }
+          setHasToken(cookies.accessToken?true:false)
 
           if (_e["withCustomization"]) {
             setHasCustomization(_e["withCustomization"]);
@@ -119,6 +106,7 @@ export default function EventPage() {
             console.log(error)
         });
     }
+
     if (hasCustomization) {
       var _url = "https://event.hermeslive.com/events/" + event_id + "/customization";
       axios.get(_url)
@@ -151,26 +139,14 @@ export default function EventPage() {
       className="absolute bg-blue-400 w-full h-full bg-no-repeat bg-center bg-cover"
       style={{backgroundImage: layout["--pc-bg-url"], backgroundColor: layout["--pc-bg-color"]}}
     >
-      {
-        submitting &&
-        <div>
-          u are submitting the following:
-          <ul>
-          {Object.entries(formData).map(([name, value]) => (
-                <li key={name}><strong>{name}</strong>:{value.toString()}</li>
-                ))}
-          </ul>
-        </div>
-      }
     <div className="flex flex-col justify-center">
     <form className="md:w-3/4 sm:w-full px-4 py-4" onSubmit={handleSubmit} onChange={handleChange}>
-
         <div>
           <img style={{height:layout["--pc-logo-height"]}} src={config["logoUrl"]} />
         </div>
         <div>
           <h4 style={{color:layout["--pc-title-color"]}} className="text-3xl font-semibold pb-4">
-            {title}
+            {eventCtx["title"]}
           </h4>
         </div>
         <div style={{color:layout["--pc-label-color"]}} dangerouslySetInnerHTML={{ __html: config["label"]}} />
@@ -201,6 +177,8 @@ export default function EventPage() {
   }
 
   var logo_url= customizationCtx.customization.customLogo.logoUrl;
+  var st = moment(eventCtx["actualStartDatetime"]);
+  var et = moment(eventCtx["actualEndDatetime"]);
   return (
 	<>
     <Navbar event_id={eventID} have_protection={hasPasscode} logo_url={logo_url}/>
@@ -210,36 +188,36 @@ export default function EventPage() {
         <div className="flex flex-col lg:flex-row py-4">
           <div className="flex w-full lg:w-8/12">
             <div className="video">
-              { ReactHtmlParser(iFrame) }
+              { ReactHtmlParser(eventCtx["embedHtml"]) }
             </div>
           </div>
           <div className="flex lg:w-4/12 bg-black">
             <div className="flex flex-col">
               <div className="flex flex-row px-3 mt-3">
                 {
-                  (startTime && endTime) ?
+                  (st && et) ?
                   (
                     <>
                     <div className="start-date-label mr-1">
-                      <span className="day">{startTime.format("MMM")}</span>
-                      <span className="day">{startTime.format("DD")}</span>
+                      <span className="day">{st.format("MMM")}</span>
+                      <span className="day">{st.format("DD")}</span>
                     </div>
                     <div className="text-white text-sm mt-1 mr-1">
-                      {startTime.format("HH:mm")} -
+                      {st.format("HH:mm")} -
                     </div>
                     {
                       // show date bubble if start != end date
-                      startTime.isSame(endTime, 'day') ?
+                      st.isSame(et, 'day') ?
                       (""):
                       (
                         <div className="start-date-label mr-1">
-                          <span className="day">{endTime.format("MMM")}</span>
-                          <span className="day">{endTime.format("DD")}</span>
+                          <span className="day">{et.format("MMM")}</span>
+                          <span className="day">{et.format("DD")}</span>
                         </div>
                       )
                     }
                     <div className="text-white text-sm mt-1">
-                      {endTime.format("HH:mm")}
+                      {et.format("HH:mm")}
                     </div>
                     </>
                   ):("")
@@ -247,16 +225,17 @@ export default function EventPage() {
                 </div>
               <div>
                 <h1 className="text-white text-lg px-3 py-3 font-bold">
-                  {title}
+                  {eventCtx["title"]}
                 </h1>
               </div>
             </div>
           </div>
         </div>
-        <div className="flex">
+        <div className="border-b py-3" />
+        <div className="flex py-8">
           {
             isEventLoaded ? (
-              <div className="content" dangerouslySetInnerHTML={{ __html: content }} />
+              <div className="content" dangerouslySetInnerHTML={{ __html: eventCtx["description"]}} />
             ):("")
           }
         </div>
